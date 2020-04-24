@@ -19,9 +19,7 @@ struct DetailRedView<T: DetailRedPresenting>: View {
     init(presenter: T) {
         self.presenter = presenter
         print(presentationMode.wrappedValue.isPresented)
-        let view = EmptyView()
-            .sheet(isPresented: $isActive, content: { EmptyView() })
-        print(view)
+        
     }
 
     var body: some View {
@@ -53,7 +51,7 @@ private struct Content<T: DetailRedPresenting>: View {
     
     var body: some View {
         ZStack {
-            Color.gray
+            Color(UIColor(red: 0.81, green: 0.38, blue: 0.33, alpha: 0.3))
                 .edgesIgnoringSafeArea(.all)
             if presenter.viewModel != nil {
                 Button(action: {
@@ -66,9 +64,8 @@ private struct Content<T: DetailRedPresenting>: View {
                 }
                 .foregroundColor(Color.blue)
             } else {
-                Text("Please select a date")
+                Text("This view was not presented as a modal")
             }
-            
         }
         .navigationBarTitle(Text("DetailRed"))
     }

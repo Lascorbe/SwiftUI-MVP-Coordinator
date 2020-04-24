@@ -16,7 +16,7 @@ protocol NavigationLinkCoordinating: Coordinating {
 
 protocol ModalCoordinating: Coordinating {
     associatedtype T: ViewModel
-    func present(viewModel: T, isPresented: Binding<Bool>) -> (() -> SwiftUIView)
+    func present(viewModel: T, isPresented: Binding<Bool>) -> SwiftUIView
 }
 
 protocol UIKitCoordinating {

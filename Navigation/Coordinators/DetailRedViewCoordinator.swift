@@ -18,19 +18,19 @@ struct DetailRedCoordinator: DetailRedCoordinating {
     }
 }
 
+// ⚠️ How can we wrap `.sheet`, which returns this 👇, to return it not only from a struct, but from a protocol, so we are able to mock the coordinator if we want to, like with the other ones
+// typealias SheetReturnType = SwiftUI.ModifiedContent<SwiftUI.EmptyView, SwiftUI.IdentifiedPreferenceTransformModifier<SwiftUI.SheetPreference.Key>>
+
 //protocol DetailRedModalCoordinating: ModalCoordinating {
 //    func present(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> SwiftUIView
 //}
-//
-//struct DetailRedModalCoordinator: DetailRedModalCoordinating {
-//    typealias SwiftUIView = (@ViewBuilder () -> View)
-//    
-//    func present(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> (@ViewBuilder () -> View) {
-//        let view = DetailRedFactory.make(with: viewModel)
-//        return Group {
-//            EmptyView()
-//                .sheet(isPresented: isPresented, content: { view })
-//                .onAppear()
-//        }
-//    }
-//}
+
+struct DetailRedModalCoordinator {
+    func present(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some View {
+        let view = DetailRedFactory.make(with: viewModel)
+        return EmptyView()
+            .sheet(isPresented: isPresented, content: {
+                NavigationView { view }
+            })
+    }
+}

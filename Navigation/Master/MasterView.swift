@@ -58,42 +58,45 @@ private struct Row<T: MasterPresenting>: View {
     
     var date: Date
     
-    @State private var selection: Int? = 0 // using selection instead of isActive on this view to show how to put several buttons on the same row
-    private let buttonTag1 = 1
-    private let buttonTag2 = 2
+    @State private var selection: Int? = 0 // using selection instead of isActive on this view to show how to put several navigation links on the same row
+    private enum ButtonTag: Int {
+        case one = 1, two
+    }
+    
+    @State private var isPresented: Bool = false
     
     var body: some View {
         VStack {
             HStack {
                 Button(action: {
-                    self.selection = self.buttonTag1
+                    self.selection = ButtonTag.one.rawValue
                 }) {
                     Text("\(date, formatter: dateFormatter)")
                         .background(
-                            self.presenter.dateSelected(date: date, tag: buttonTag1, selection: $selection)
+                            self.presenter.dateSelected(date: date, tag: ButtonTag.two.rawValue, selection: $selection)
                     )
                 }
-                .foregroundColor(Color.red)
+                .foregroundColor(Color.green)
                 
                 Button(action: {
-                    self.selection = self.buttonTag2
+                    self.selection = ButtonTag.two.rawValue
                 }) {
                     Text("Go Red")
                         .background(
-                            self.presenter.anotherSelected(date: date, tag: buttonTag2, selection: $selection)
+                            self.presenter.anotherSelected(date: date, tag: ButtonTag.two.rawValue, selection: $selection)
                     )
                 }
                 .foregroundColor(Color.blue)
             }
             Button(action: {
-                self.selection = self.buttonTag2
+                self.isPresented = true
             }) {
                 Text("Go Red")
                     .background(
-                        self.presenter.anotherSelected(date: date, tag: buttonTag2, selection: $selection)
+                        self.presenter.modalSelected(date: date, isPresented: $isPresented)
                 )
             }
-            .foregroundColor(Color.blue)
+            .foregroundColor(Color.red)
         }
         .frame(maxWidth: .infinity)
         .buttonStyle(ProductFamilyRowStyle())
@@ -112,7 +115,7 @@ struct MasterView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), detailCoordinator: DetailCoordinator(), detailRedCoordinator: DetailRedCoordinator())
+        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), detailCoordinator: DetailCoordinator(), detailRedCoordinator: DetailRedCoordinator(), detailRedModalCoordinator: DetailRedModalCoordinator())
         return MasterView(presenter: presenter)
     }
 }

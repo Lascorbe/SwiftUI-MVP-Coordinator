@@ -8,11 +8,13 @@ import SwiftUI
 protocol MasterPresenting: ObservableObject {
     associatedtype SwiftUIView1: View
     associatedtype SwiftUIView2: View
+    associatedtype SwiftUIView3: View
     var viewModel: MasterViewModel { get }
     func add()
     func remove(at index: Int)
     func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView1
     func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView2
+    func modalSelected(date: Date, isPresented: Binding<Bool>) -> SwiftUIView3
 }
 
 class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPresenting {
@@ -24,13 +26,16 @@ class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPr
     
     private let detailCoordinator: D
     private let detailRedCoordinator: R
+    private let detailRedModalCoordinator: DetailRedModalCoordinator
     
     init(viewModel: MasterViewModel = MasterViewModel(dates: []),
          detailCoordinator: D,
-         detailRedCoordinator: R) {
+         detailRedCoordinator: R,
+         detailRedModalCoordinator: DetailRedModalCoordinator) {
         self.viewModel = viewModel
         self.detailCoordinator = detailCoordinator
         self.detailRedCoordinator = detailRedCoordinator
+        self.detailRedModalCoordinator = detailRedModalCoordinator
     }
     
     func add() {
@@ -51,5 +56,9 @@ class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPr
     
     func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
         return detailRedCoordinator.present(viewModel: DetailRedViewModel(date: date), tag: tag, selection: selection)
+    }
+    
+    func modalSelected(date: Date, isPresented: Binding<Bool>) -> some View {
+        return detailRedModalCoordinator.present(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
     }
 }

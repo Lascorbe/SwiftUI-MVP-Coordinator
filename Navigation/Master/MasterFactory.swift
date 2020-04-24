@@ -10,7 +10,8 @@ enum MasterFactory {
     
     static func make() -> ViewType {
         let presenter = MasterPresenter(detailCoordinator: DetailCoordinator(),
-                                        detailRedCoordinator: DetailRedCoordinator())
+                                        detailRedCoordinator: DetailRedCoordinator(),
+                                        detailRedModalCoordinator: DetailRedModalCoordinator())
         let view = MasterView(presenter: presenter)
         return view
     }
