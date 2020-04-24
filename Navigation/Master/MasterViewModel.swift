@@ -5,6 +5,6 @@
 
 import Foundation
 
-struct MasterViewModel {
+struct MasterViewModel: ViewModel {
     let dates: [Date]
 }

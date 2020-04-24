@@ -5,6 +5,6 @@
 
 import Foundation
 
-struct DetailViewModel: ViewModel {
+struct DetailRedViewModel: ViewModel {
     let date: Date
 }

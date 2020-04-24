@@ -25,6 +25,12 @@
 		A057FE8C24523254006254F3 /* MasterViewCoordinator+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FE8B24523254006254F3 /* MasterViewCoordinator+UIKit.swift */; };
 		A057FE8E245232D3006254F3 /* DetailFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FE8D245232D3006254F3 /* DetailFactory.swift */; };
 		A057FE90245232DA006254F3 /* MasterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FE8F245232DA006254F3 /* MasterFactory.swift */; };
+		A057FEB624524C32006254F3 /* DetailRedFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEB224524C32006254F3 /* DetailRedFactory.swift */; };
+		A057FEB724524C32006254F3 /* DetailRedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEB324524C32006254F3 /* DetailRedViewModel.swift */; };
+		A057FEB824524C32006254F3 /* DetailRedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEB424524C32006254F3 /* DetailRedView.swift */; };
+		A057FEB924524C32006254F3 /* DetailRedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEB524524C32006254F3 /* DetailRedPresenter.swift */; };
+		A057FEBB24524D48006254F3 /* DetailRedViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEBA24524D48006254F3 /* DetailRedViewCoordinator.swift */; };
+		A057FEBD24525039006254F3 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FEBC24525039006254F3 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +54,12 @@
 		A057FE8B24523254006254F3 /* MasterViewCoordinator+UIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MasterViewCoordinator+UIKit.swift"; sourceTree = "<group>"; };
 		A057FE8D245232D3006254F3 /* DetailFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailFactory.swift; sourceTree = "<group>"; };
 		A057FE8F245232DA006254F3 /* MasterFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterFactory.swift; sourceTree = "<group>"; };
+		A057FEB224524C32006254F3 /* DetailRedFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedFactory.swift; sourceTree = "<group>"; };
+		A057FEB324524C32006254F3 /* DetailRedViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedViewModel.swift; sourceTree = "<group>"; };
+		A057FEB424524C32006254F3 /* DetailRedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedView.swift; sourceTree = "<group>"; };
+		A057FEB524524C32006254F3 /* DetailRedPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedPresenter.swift; sourceTree = "<group>"; };
+		A057FEBA24524D48006254F3 /* DetailRedViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedViewCoordinator.swift; sourceTree = "<group>"; };
+		A057FEBC24525039006254F3 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,9 +94,11 @@
 			children = (
 				A057FE542451D952006254F3 /* AppDelegate.swift */,
 				A057FE562451D952006254F3 /* SceneDelegate.swift */,
+				A057FEBC24525039006254F3 /* ViewModel.swift */,
 				A057FE6C2451DBC3006254F3 /* Coordinators */,
 				A057FE682451DBC3006254F3 /* Master */,
 				A057FE6E2451DBC3006254F3 /* Detail */,
+				A057FEB124524C32006254F3 /* DetailRed */,
 				A057FE792451DC69006254F3 /* Helpers */,
 				A057FE5A2451D953006254F3 /* Assets.xcassets */,
 				A057FE5F2451D953006254F3 /* LaunchScreen.storyboard */,
@@ -120,6 +134,7 @@
 				A057FE8B24523254006254F3 /* MasterViewCoordinator+UIKit.swift */,
 				A057FE772451DBE7006254F3 /* MasterViewCoordinator.swift */,
 				A057FE7C2451E9B5006254F3 /* DetailViewCoordinator.swift */,
+				A057FEBA24524D48006254F3 /* DetailRedViewCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -141,6 +156,17 @@
 				A057FE7A2451DC69006254F3 /* DateFormatter.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		A057FEB124524C32006254F3 /* DetailRed */ = {
+			isa = PBXGroup;
+			children = (
+				A057FEB224524C32006254F3 /* DetailRedFactory.swift */,
+				A057FEB524524C32006254F3 /* DetailRedPresenter.swift */,
+				A057FEB424524C32006254F3 /* DetailRedView.swift */,
+				A057FEB324524C32006254F3 /* DetailRedViewModel.swift */,
+			);
+			path = DetailRed;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,14 +247,20 @@
 				A057FE752451DBC4006254F3 /* DetailView.swift in Sources */,
 				A057FE7D2451E9B5006254F3 /* DetailViewCoordinator.swift in Sources */,
 				A057FE8824520B61006254F3 /* DetailViewModel.swift in Sources */,
+				A057FEB624524C32006254F3 /* DetailRedFactory.swift in Sources */,
 				A057FE762451DBC4006254F3 /* DetailPresenter.swift in Sources */,
 				A057FE8A24522D3D006254F3 /* Coordinator.swift in Sources */,
 				A057FE90245232DA006254F3 /* MasterFactory.swift in Sources */,
 				A057FE8E245232D3006254F3 /* DetailFactory.swift in Sources */,
 				A057FE712451DBC4006254F3 /* MasterPresenter.swift in Sources */,
+				A057FEBD24525039006254F3 /* ViewModel.swift in Sources */,
+				A057FEB924524C32006254F3 /* DetailRedPresenter.swift in Sources */,
+				A057FEB824524C32006254F3 /* DetailRedView.swift in Sources */,
 				A057FE552451D952006254F3 /* AppDelegate.swift in Sources */,
 				A057FE8C24523254006254F3 /* MasterViewCoordinator+UIKit.swift in Sources */,
 				A057FE572451D952006254F3 /* SceneDelegate.swift in Sources */,
+				A057FEBB24524D48006254F3 /* DetailRedViewCoordinator.swift in Sources */,
+				A057FEB724524C32006254F3 /* DetailRedViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,26 +6,31 @@
 import SwiftUI
 
 protocol MasterPresenting: ObservableObject {
-    associatedtype SwiftUIView: View
+    associatedtype SwiftUIView1: View
+    associatedtype SwiftUIView2: View
     var viewModel: MasterViewModel { get }
     func add()
     func remove(at index: Int)
-    func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView
+    func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView1
+    func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView2
 }
 
-class MasterPresenter<T: DetailCoordinating>: MasterPresenting {
+class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
             print(viewModel)
         }
     }
     
-    private let detailCoordinator: T
+    private let detailCoordinator: D
+    private let detailRedCoordinator: R
     
     init(viewModel: MasterViewModel = MasterViewModel(dates: []),
-         detailCoordinator: T) {
+         detailCoordinator: D,
+         detailRedCoordinator: R) {
         self.viewModel = viewModel
         self.detailCoordinator = detailCoordinator
+        self.detailRedCoordinator = detailRedCoordinator
     }
     
     func add() {
@@ -42,5 +47,9 @@ class MasterPresenter<T: DetailCoordinating>: MasterPresenting {
     
     func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
         return detailCoordinator.present(viewModel: DetailViewModel(date: date), tag: tag, selection: selection)
+    }
+    
+    func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
+        return detailRedCoordinator.present(viewModel: DetailRedViewModel(date: date), tag: tag, selection: selection)
     }
 }

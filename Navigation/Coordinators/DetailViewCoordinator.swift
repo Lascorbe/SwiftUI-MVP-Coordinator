@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-protocol DetailCoordinating: Coordinating {
+protocol DetailCoordinating: NavigationLinkCoordinating {
     func present(viewModel: DetailViewModel, tag: Int, selection: Binding<Int?>) -> SwiftUIView
 }
 

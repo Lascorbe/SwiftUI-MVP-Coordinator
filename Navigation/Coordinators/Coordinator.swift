@@ -9,6 +9,16 @@ protocol Coordinating {
     associatedtype SwiftUIView: View
 }
 
+protocol NavigationLinkCoordinating: Coordinating {
+    associatedtype T: ViewModel
+    func present(viewModel: T, tag: Int, selection: Binding<Int?>) -> SwiftUIView
+}
+
+protocol ModalCoordinating: Coordinating {
+    associatedtype T: ViewModel
+    func present(viewModel: T, isPresented: Binding<Bool>) -> (() -> SwiftUIView)
+}
+
 protocol UIKitCoordinating {
     func present()
 }

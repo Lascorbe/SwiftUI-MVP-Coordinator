@@ -5,6 +5,4 @@
 
 import Foundation
 
-struct DetailViewModel: ViewModel {
-    let date: Date
-}
+protocol ViewModel {}

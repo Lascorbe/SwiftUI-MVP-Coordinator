@@ -31,7 +31,7 @@ struct MasterView<T: MasterPresenting>: View {
 }
 
 private struct Content<T: MasterPresenting>: View {
-    @ObservedObject var presenter: T // tried passing a closure instead, but `some View` cannot be used in closures :(
+    @ObservedObject var presenter: T
     
     var body: some View {
         List {
@@ -41,6 +41,14 @@ private struct Content<T: MasterPresenting>: View {
                 indices.forEach { self.presenter.remove(at: $0) }
             }
         }
+    }
+}
+
+struct ProductFamilyRowStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .colorMultiply(configuration.isPressed ?
+                Color.white.opacity(0.5) : Color.white)
     }
 }
 
@@ -55,27 +63,40 @@ private struct Row<T: MasterPresenting>: View {
     private let buttonTag2 = 2
     
     var body: some View {
-        HStack {
-            Button(action: {
-                self.selection = self.buttonTag1
-            }) {
-                Text("\(date, formatter: dateFormatter)")
-                    .background(
-                        self.presenter.dateSelected(date: date, tag: buttonTag1, selection: $selection)
-                )
+        VStack {
+            HStack {
+                Button(action: {
+                    self.selection = self.buttonTag1
+                }) {
+                    Text("\(date, formatter: dateFormatter)")
+                        .background(
+                            self.presenter.dateSelected(date: date, tag: buttonTag1, selection: $selection)
+                    )
+                }
+                .foregroundColor(Color.red)
+                
+                Button(action: {
+                    self.selection = self.buttonTag2
+                }) {
+                    Text("Go Red")
+                        .background(
+                            self.presenter.anotherSelected(date: date, tag: buttonTag2, selection: $selection)
+                    )
+                }
+                .foregroundColor(Color.blue)
             }
-            .foregroundColor(Color.red)
-            
             Button(action: {
                 self.selection = self.buttonTag2
             }) {
-                Text("\(date, formatter: dateFormatter)")
+                Text("Go Red")
                     .background(
-                        self.presenter.dateSelected(date: date, tag: buttonTag2, selection: $selection)
+                        self.presenter.anotherSelected(date: date, tag: buttonTag2, selection: $selection)
                 )
             }
             .foregroundColor(Color.blue)
         }
+        .frame(maxWidth: .infinity)
+        .buttonStyle(ProductFamilyRowStyle())
     }
 }
 
@@ -91,7 +112,7 @@ struct MasterView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), detailCoordinator: DetailCoordinator())
+        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), detailCoordinator: DetailCoordinator(), detailRedCoordinator: DetailRedCoordinator())
         return MasterView(presenter: presenter)
     }
 }
