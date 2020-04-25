@@ -6,15 +6,15 @@
 import SwiftUI
 
 protocol MasterPresenting: ObservableObject {
-    associatedtype SwiftUIView1: View
-    associatedtype SwiftUIView2: View
-    associatedtype SwiftUIView3: View
+    associatedtype U1: View
+    associatedtype U2: View
+    associatedtype U3: View
     var viewModel: MasterViewModel { get }
     func add()
     func remove(at index: Int)
-    func firstSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView1
-    func secondSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView2
-    func modalSelected(date: Date, isPresented: Binding<Bool>) -> SwiftUIView3
+    func firstSelected(date: Date, isPresented: Binding<Bool>) -> U1
+    func secondSelected(date: Date, isPresented: Binding<Bool>) -> U2
+    func modalSelected(date: Date, isPresented: Binding<Bool>) -> U3
 }
 
 class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
@@ -44,12 +44,12 @@ class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
         viewModel = MasterViewModel(dates: dates)
     }
     
-    func firstSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
-        return coordinator.presentDetailView(viewModel: DetailViewModel(date: date), tag: tag, selection: selection)
+    func firstSelected(date: Date, isPresented: Binding<Bool>) -> some View {
+        return coordinator.presentDetailView(viewModel: DetailViewModel(date: date), isPresented: isPresented)
     }
     
-    func secondSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
-        return coordinator.presentDetailRedView(viewModel: DetailRedViewModel(date: date), tag: tag, selection: selection)
+    func secondSelected(date: Date, isPresented: Binding<Bool>) -> some View {
+        return coordinator.presentDetailRedView(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
     }
     
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> some View {

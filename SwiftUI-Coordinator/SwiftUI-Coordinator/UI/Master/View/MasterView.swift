@@ -58,42 +58,39 @@ private struct Row<T: MasterPresenting>: View {
     
     var date: Date
     
-    @State private var selection: Int? = 0 // using selection instead of isActive on this view to show how to put several navigation links on the same row
-    private enum ButtonTag: Int {
-        case one = 1, two
-    }
-    
-    @State private var isPresented: Bool = false
+    @State private var isPresented1 = false
+    @State private var isPresented2 = false
+    @State private var isPresented3: Bool = false
     
     var body: some View {
         VStack {
             HStack {
                 Button(action: {
-                    self.selection = ButtonTag.one.rawValue
+                    self.isPresented1 = true
                 }) {
                     Text("\(date, formatter: dateFormatter)")
                         .background(
-                            self.presenter.dateSelected(date: date, tag: ButtonTag.two.rawValue, selection: $selection)
-                    )
+                            self.presenter.firstSelected(date: date, isPresented: $isPresented1)
+                        )
                 }
                 .foregroundColor(Color.green)
                 
                 Button(action: {
-                    self.selection = ButtonTag.two.rawValue
+                    self.isPresented2 = true
                 }) {
                     Text("Go Red")
                         .background(
-                            self.presenter.anotherSelected(date: date, tag: ButtonTag.two.rawValue, selection: $selection)
-                    )
+                            self.presenter.secondSelected(date: date, isPresented: $isPresented2)
+                        )
                 }
                 .foregroundColor(Color.blue)
             }
             Button(action: {
-                self.isPresented = true
+                self.isPresented3 = true
             }) {
                 Text("Go Red")
                     .background(
-                        self.presenter.modalSelected(date: date, isPresented: $isPresented)
+                        self.presenter.modalSelected(date: date, isPresented: $isPresented3)
                 )
             }
             .foregroundColor(Color.red)
