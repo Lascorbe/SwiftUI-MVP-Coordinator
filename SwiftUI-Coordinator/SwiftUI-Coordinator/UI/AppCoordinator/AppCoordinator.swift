@@ -5,18 +5,16 @@
 
 import SwiftUI
 
-struct AppCoordinator: UIKitCoordinating {
+class AppCoordinator: BaseCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow) {
         self.window = window
     }
     
-    func start() {
-        let view = MasterFactory.make()
-        let navigation = NavigationView { view }
-        let hosting = UIHostingController(rootView: navigation)
-        window?.rootViewController = hosting
-        window?.makeKeyAndVisible()
+    @discardableResult
+    func start() -> some ReturnWrapper {
+        let coordinator = MasterCoordinator(window: window)
+        return coordinator.coordinate(to: coordinator)
     }
 }

@@ -150,8 +150,8 @@
 		A057FEED24543685006254F3 /* DetailRed */ = {
 			isa = PBXGroup;
 			children = (
-				A057FEEE24543685006254F3 /* DetailRedFactory.swift */,
 				A057FEF024543685006254F3 /* DetailRedViewCoordinator.swift */,
+				A057FEEE24543685006254F3 /* DetailRedFactory.swift */,
 				A057FF3224543A62006254F3 /* View */,
 			);
 			path = DetailRed;

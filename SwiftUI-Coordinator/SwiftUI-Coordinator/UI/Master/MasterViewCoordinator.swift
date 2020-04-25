@@ -5,15 +5,64 @@
 
 import SwiftUI
 
-protocol MasterCoordinating: Coordinating {
-    func present(isActive: Binding<Bool>) -> SwiftUIView
+protocol MasterBaseCoordinator: BaseCoordinator {
+    associatedtype RW1: ReturnWrapper
+    associatedtype RW2: ReturnWrapper
+    associatedtype RW3: ReturnWrapper
+    func presentDetailView(viewModel: DetailViewModel, tag: Int, selection: Binding<Int?>) -> RW1
+    func presentDetailRedView(viewModel: DetailRedViewModel, tag: Int, selection: Binding<Int?>) -> RW2
+    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> RW3
 }
 
-struct MasterCoordinator: MasterCoordinating {
-    typealias SwiftUIView = NavigationLink<EmptyView, MasterFactory.ViewType>
+class MasterCoordinator: MasterBaseCoordinator {
+    weak var window: UIWindow?
     
-    func present(isActive: Binding<Bool>) -> SwiftUIView {
-        let view = MasterFactory.make()
-        return NavigationLink(destination: view, isActive: isActive) { EmptyView() }
+    init(window: UIWindow?) {
+        self.window = window
+    }
+    
+    @discardableResult
+    func start() -> some ReturnWrapper {
+        let view = MasterFactory.make(with: self)
+        let navigation = NavigationView { view }
+        let hosting = UIHostingController(rootView: navigation)
+        window?.rootViewController = hosting
+        window?.makeKeyAndVisible()
+        return EmptyReturnWrapper(destination: EmptyView())
     }
 }
+
+extension MasterCoordinator {
+    func presentDetailView(viewModel: DetailViewModel, tag: Int, selection: Binding<Int?>) -> some ReturnWrapper {
+        return EmptyReturnWrapper(destination: EmptyView())
+    }
+    
+    func presentDetailRedView(viewModel: DetailRedViewModel, tag: Int, selection: Binding<Int?>) -> some ReturnWrapper {
+        return EmptyReturnWrapper(destination: EmptyView())
+    }
+    
+    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+        return EmptyReturnWrapper(destination: EmptyView())
+    }
+}
+
+// We need this wrapper just for the sake of making all the Coordinators conform to the same protocol,
+// and since the 1st coordinator must rely on UIKit, we are just going to return an empty ReturnWrapper.
+// The rest of the SwiftUI navigation should be done through NavigationReturnWrapper and ModalReturnWrapper
+// which you can find on Coordinator.swift
+
+struct EmptyReturnWrapper<T: View>: ReturnWrapper {
+    typealias DestinationView = T
+    var destination: T
+    
+    var body: some View {
+        EmptyView()
+    }
+}
+
+//typealias SwiftUIView = NavigationLink<EmptyView, MasterFactory.ViewType>
+//
+//func present(isActive: Binding<Bool>) -> SwiftUIView {
+//    let view = MasterFactory.make()
+//    return NavigationLink(destination: view, isActive: isActive) { EmptyView() }
+//}

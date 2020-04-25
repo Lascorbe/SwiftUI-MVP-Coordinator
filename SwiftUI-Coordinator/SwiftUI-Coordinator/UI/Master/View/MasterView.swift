@@ -115,7 +115,7 @@ struct MasterView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), detailCoordinator: DetailCoordinator(), detailRedCoordinator: DetailRedCoordinator(), detailRedModalCoordinator: DetailRedModalCoordinator())
+        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), coordinator: MasterCoordinator(window: nil))
         return MasterView(presenter: presenter)
     }
 }

@@ -6,12 +6,8 @@
 import SwiftUI
 
 enum MasterFactory {
-    typealias ViewType = MasterView<MasterPresenter<DetailCoordinator, DetailRedCoordinator>>
-    
-    static func make() -> ViewType {
-        let presenter = MasterPresenter(detailCoordinator: DetailCoordinator(),
-                                        detailRedCoordinator: DetailRedCoordinator(),
-                                        detailRedModalCoordinator: DetailRedModalCoordinator())
+    static func make<T: MasterBaseCoordinator>(with coordinator: T) -> some View {
+        let presenter = MasterPresenter(coordinator: coordinator)
         let view = MasterView(presenter: presenter)
         return view
     }

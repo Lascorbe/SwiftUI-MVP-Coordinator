@@ -27,10 +27,8 @@ protocol UIKitCoordinating {
 }
 
 protocol BaseCoordinator: AssociatedObjects {
-    associatedtype U1: ReturnWrapper
-    associatedtype U2: ReturnWrapper
-    func coordinate<T: BaseCoordinator>(to coordinator: T) -> U1
-    func start() -> U2
+    associatedtype U: ReturnWrapper
+    func start() -> U
 }
 
 // Mixin Extension
@@ -38,8 +36,8 @@ protocol BaseCoordinator: AssociatedObjects {
 private var identifierKey: UInt8 = 0
 private var childsKey: UInt8 = 0
 
-private extension BaseCoordinator {
-    var identifier: UUID {
+extension BaseCoordinator {
+    private var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -52,7 +50,7 @@ private extension BaseCoordinator {
         }
     }
     
-    var childs: [UUID: Any] {
+    private var childs: [UUID: Any] {
         get {
             guard let childs: [UUID: Any] = associatedObject(for: &childsKey) else {
                 self.childs = [UUID: Any]()
@@ -65,11 +63,11 @@ private extension BaseCoordinator {
         }
     }
     
-    func store<T: BaseCoordinator>(coordinator: T) {
+    private func store<T: BaseCoordinator>(coordinator: T) {
         childs[coordinator.identifier] = coordinator
     }
     
-    func free<T: BaseCoordinator>(coordinator: T) {
+    private func free<T: BaseCoordinator>(coordinator: T) {
         childs[coordinator.identifier] = nil
     }
     

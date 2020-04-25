@@ -12,30 +12,24 @@ protocol MasterPresenting: ObservableObject {
     var viewModel: MasterViewModel { get }
     func add()
     func remove(at index: Int)
-    func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView1
-    func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView2
+    func firstSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView1
+    func secondSelected(date: Date, tag: Int, selection: Binding<Int?>) -> SwiftUIView2
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> SwiftUIView3
 }
 
-class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPresenting {
+class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
             print(viewModel)
         }
     }
     
-    private let detailCoordinator: D
-    private let detailRedCoordinator: R
-    private let detailRedModalCoordinator: DetailRedModalCoordinator
+    private let coordinator: C
     
     init(viewModel: MasterViewModel = MasterViewModel(dates: []),
-         detailCoordinator: D,
-         detailRedCoordinator: R,
-         detailRedModalCoordinator: DetailRedModalCoordinator) {
+         coordinator: C) {
         self.viewModel = viewModel
-        self.detailCoordinator = detailCoordinator
-        self.detailRedCoordinator = detailRedCoordinator
-        self.detailRedModalCoordinator = detailRedModalCoordinator
+        self.coordinator = coordinator
     }
     
     func add() {
@@ -50,15 +44,15 @@ class MasterPresenter<D: DetailCoordinating, R: DetailRedCoordinating>: MasterPr
         viewModel = MasterViewModel(dates: dates)
     }
     
-    func dateSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
-        return detailCoordinator.present(viewModel: DetailViewModel(date: date), tag: tag, selection: selection)
+    func firstSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
+        return coordinator.presentDetailView(viewModel: DetailViewModel(date: date), tag: tag, selection: selection)
     }
     
-    func anotherSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
-        return detailRedCoordinator.present(viewModel: DetailRedViewModel(date: date), tag: tag, selection: selection)
+    func secondSelected(date: Date, tag: Int, selection: Binding<Int?>) -> some View {
+        return coordinator.presentDetailRedView(viewModel: DetailRedViewModel(date: date), tag: tag, selection: selection)
     }
     
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> some View {
-        return detailRedModalCoordinator.present(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
+        return coordinator.presentDetailRedViewInModal(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
     }
 }
