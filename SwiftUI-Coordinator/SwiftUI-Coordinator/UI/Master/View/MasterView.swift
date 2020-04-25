@@ -60,41 +60,49 @@ private struct Row<T: MasterPresenting>: View {
     
     @State private var isPresented1 = false
     @State private var isPresented2 = false
-    @State private var isPresented3: Bool = false
+    @State private var isPresented3 = false
     
     var body: some View {
-        VStack {
-            HStack {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("\(date, formatter: dateFormatter)")
+                    .padding(.bottom)
+                
                 Button(action: {
                     self.isPresented1 = true
                 }) {
-                    Text("\(date, formatter: dateFormatter)")
+                    Text("Go Detail")
                         .background(
                             self.presenter.firstSelected(date: date, isPresented: $isPresented1)
-                        )
+                    )
                 }
                 .foregroundColor(Color.green)
+                .padding(.bottom)
                 
                 Button(action: {
                     self.isPresented2 = true
                 }) {
-                    Text("Go Red")
+                    Text("Go Detail Red")
                         .background(
                             self.presenter.secondSelected(date: date, isPresented: $isPresented2)
-                        )
+                    )
                 }
-                .foregroundColor(Color.blue)
+                .foregroundColor(Color.red)
+                .padding(.bottom)
+                
+                Button(action: {
+                    self.isPresented3 = true
+                }) {
+                    Text("Go Detail Red Modal")
+                        .background(
+                            self.presenter.modalSelected(date: date, isPresented: $isPresented3)
+                    )
+                }
+                .foregroundColor(Color.red)
             }
-            Button(action: {
-                self.isPresented3 = true
-            }) {
-                Text("Go Red")
-                    .background(
-                        self.presenter.modalSelected(date: date, isPresented: $isPresented3)
-                )
-            }
-            .foregroundColor(Color.red)
+            Spacer()
         }
+        .padding()
         .frame(maxWidth: .infinity)
         .buttonStyle(ProductFamilyRowStyle())
     }
@@ -112,7 +120,6 @@ struct MasterView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        let presenter = MasterPresenter(viewModel: MasterViewModel(dates: dates), coordinator: MasterCoordinator(window: nil))
-        return MasterView(presenter: presenter)
+        return MasterFactory.make(with: MasterViewModel(dates: dates), coordinator: MasterRootCoordinator(window: nil))
     }
 }

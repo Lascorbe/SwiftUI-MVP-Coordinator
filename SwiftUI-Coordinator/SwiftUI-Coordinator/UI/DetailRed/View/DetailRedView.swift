@@ -73,8 +73,9 @@ private struct Content<T: DetailRedPresenting>: View {
 
 
 struct DetailRedView_Previews: PreviewProvider {
+    @State static var isActive = false
+    
     static var previews: some View {
-        let presenter = DetailRedPresenter(viewModel: DetailRedViewModel(date: Date()), masterCoordinator: MasterCoordinator())
-        return DetailRedView(presenter: presenter)
+        return DetailRedFactory.make(with: DetailRedViewModel(date: Date()), coordinator: DetailRedCoordinator(viewModel: nil, isPresented: $isActive))
     }
 }

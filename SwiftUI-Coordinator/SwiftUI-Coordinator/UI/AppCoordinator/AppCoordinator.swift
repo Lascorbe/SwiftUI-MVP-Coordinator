@@ -14,7 +14,7 @@ class AppCoordinator: BaseCoordinator {
     
     @discardableResult
     func start() -> some ReturnWrapper {
-        let coordinator = MasterCoordinator(window: window)
+        let coordinator = MasterRootCoordinator(window: window)
         return coordinator.coordinate(to: coordinator)
     }
 }

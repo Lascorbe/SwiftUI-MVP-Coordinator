@@ -6,27 +6,27 @@
 import SwiftUI
 
 protocol DetailPresenting: ObservableObject {
-    associatedtype SwiftUIView: View
+    associatedtype U: View
     var viewModel: DetailViewModel? { get }
-    func buttonPressed(isActive: Binding<Bool>) -> SwiftUIView
+    func buttonPressed(isActive: Binding<Bool>) -> U
 }
 
-class DetailPresenter<T: MasterCoordinating>: DetailPresenting {
+class DetailPresenter<C: DetailBaseCoordinator>: DetailPresenting {
     @Published private(set) var viewModel: DetailViewModel? {
         didSet {
             print(viewModel!)
         }
     }
     
-    private let masterCoordinator: T
+    private let coordinator: C
     
     init(viewModel: DetailViewModel? = DetailViewModel(date: Date()),
-         masterCoordinator: T) {
+         coordinator: C) {
         self.viewModel = viewModel
-        self.masterCoordinator = masterCoordinator
+        self.coordinator = coordinator
     }
     
     func buttonPressed(isActive: Binding<Bool>) -> some View {
-        return masterCoordinator.present(isActive: isActive)
+        return coordinator.presentNextView(isPresented: isActive)
     }
 }

@@ -3,13 +3,11 @@
 //  Copyright © 2020 Luis Ascorbe. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 enum DetailRedFactory {
-    typealias ViewType = DetailRedView<DetailRedPresenter<MasterCoordinator>>
-    
-    static func make(with viewModel: DetailRedViewModel?) -> ViewType {
-        let presenter = DetailRedPresenter(viewModel: viewModel, masterCoordinator: MasterCoordinator())
+    static func make<T: DetailRedBaseCoordinator>(with viewModel: DetailRedViewModel?, coordinator: T) -> some View {
+        let presenter = DetailRedPresenter(viewModel: viewModel, coordinator: coordinator)
         let view = DetailRedView(presenter: presenter)
         return view
     }

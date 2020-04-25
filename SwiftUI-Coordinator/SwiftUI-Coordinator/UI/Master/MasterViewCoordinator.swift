@@ -5,16 +5,26 @@
 
 import SwiftUI
 
-protocol MasterBaseCoordinator: BaseCoordinator {
-    associatedtype RW1: ReturnWrapper
-    associatedtype RW2: ReturnWrapper
-    associatedtype RW3: ReturnWrapper
-    func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> RW1
-    func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> RW2
-    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> RW3
+protocol MasterBaseCoordinator: BaseCoordinator {}
+
+extension MasterBaseCoordinator {
+    func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+        let coordinator = DetailCoordinator(viewModel: viewModel, isPresented: isPresented)
+        return coordinator.start()
+    }
+    
+    func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+        let coordinator = DetailRedCoordinator(viewModel: viewModel, isPresented: isPresented)
+        return coordinator.start()
+    }
+    
+    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+        let coordinator = DetailRedModalCoordinator(viewModel: viewModel, isPresented: isPresented)
+        return coordinator.start()
+    }
 }
 
-class MasterCoordinator: MasterBaseCoordinator {
+final class MasterRootCoordinator: MasterBaseCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow?) {
@@ -23,7 +33,7 @@ class MasterCoordinator: MasterBaseCoordinator {
     
     @discardableResult
     func start() -> some ReturnWrapper {
-        let view = MasterFactory.make(with: self)
+        let view = MasterFactory.make(with: MasterViewModel(dates: [Date()]), coordinator: self)
         let navigation = NavigationView { view }
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
@@ -32,17 +42,25 @@ class MasterCoordinator: MasterBaseCoordinator {
     }
 }
 
-extension MasterCoordinator {
-    func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        return EmptyReturnWrapper(destination: EmptyView())
+final class MasterCoordinator: MasterBaseCoordinator {
+    private let viewModel: MasterViewModel?
+    private var isPresented: Binding<Bool>
+    
+    init(viewModel: MasterViewModel?, isPresented: Binding<Bool>) {
+        self.viewModel = viewModel
+        self.isPresented = isPresented
     }
     
-    func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        return EmptyReturnWrapper(destination: EmptyView())
-    }
-    
-    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        return EmptyReturnWrapper(destination: EmptyView())
+    @discardableResult
+    func start() -> some ReturnWrapper {
+        // Is there a better way to do this if?
+        if let viewModel = viewModel {
+            let view = MasterFactory.make(with: viewModel, coordinator: self)
+            return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+        } else {
+            let view = MasterFactory.make(coordinator: self)
+            return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+        }
     }
 }
 
@@ -59,10 +77,3 @@ struct EmptyReturnWrapper<T: View>: ReturnWrapper {
         EmptyView()
     }
 }
-
-//typealias SwiftUIView = NavigationLink<EmptyView, MasterFactory.ViewType>
-//
-//func present(isActive: Binding<Bool>) -> SwiftUIView {
-//    let view = MasterFactory.make()
-//    return NavigationLink(destination: view, isActive: isActive) { EmptyView() }
-//}

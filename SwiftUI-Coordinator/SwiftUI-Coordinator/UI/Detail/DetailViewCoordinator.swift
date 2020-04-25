@@ -5,15 +5,27 @@
 
 import SwiftUI
 
-protocol DetailCoordinating: NavigationLinkCoordinating {
-    func present(viewModel: DetailViewModel, tag: Int, selection: Binding<Int?>) -> SwiftUIView
+protocol DetailBaseCoordinator: BaseCoordinator {}
+
+extension DetailBaseCoordinator {
+    func presentNextView(isPresented: Binding<Bool>) -> some ReturnWrapper {
+        let coordinator = MasterCoordinator(viewModel: nil, isPresented: isPresented)
+        return coordinate(to: coordinator)
+    }
 }
 
-struct DetailCoordinator: DetailCoordinating {
-    typealias SwiftUIView = NavigationLink<EmptyView, DetailFactory.ViewType>
+class DetailCoordinator: DetailBaseCoordinator {
+    private let viewModel: DetailViewModel?
+    private var isPresented: Binding<Bool>
     
-    func present(viewModel: DetailViewModel, tag: Int, selection: Binding<Int?>) -> SwiftUIView {
-        let view = DetailFactory.make(with: viewModel)
-        return NavigationLink(destination: view, tag: tag, selection: selection) { EmptyView() }
+    init(viewModel: DetailViewModel?, isPresented: Binding<Bool>) {
+        self.viewModel = viewModel
+        self.isPresented = isPresented
+    }
+    
+    @discardableResult
+    func start() -> some ReturnWrapper {
+        let view = DetailFactory.make(with: viewModel, coordinator: self)
+        return NavigationReturnWrapper(isPresented: isPresented, destination: view)
     }
 }

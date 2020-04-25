@@ -26,7 +26,7 @@ class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
     
     private let coordinator: C
     
-    init(viewModel: MasterViewModel = MasterViewModel(dates: []),
+    init(viewModel: MasterViewModel,
          coordinator: C) {
         self.viewModel = viewModel
         self.coordinator = coordinator

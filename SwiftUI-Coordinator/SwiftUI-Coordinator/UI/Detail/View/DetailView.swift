@@ -35,8 +35,9 @@ struct DetailView<T: DetailPresenting>: View {
 
 
 struct DetailView_Previews: PreviewProvider {
+    @State static var isActive = false
+    
     static var previews: some View {
-        let presenter = DetailPresenter(viewModel: DetailViewModel(date: Date()), masterCoordinator: MasterCoordinator())
-        return DetailView(presenter: presenter)
+        return DetailFactory.make(with: DetailViewModel(date: Date()), coordinator: DetailCoordinator(viewModel: nil, isPresented: $isActive))
     }
 }
