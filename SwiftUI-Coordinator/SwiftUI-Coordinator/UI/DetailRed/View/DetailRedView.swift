@@ -18,13 +18,13 @@ struct DetailRedView<T: DetailRedPresenting>: View {
     
     init(presenter: T) {
         self.presenter = presenter
-        print(presentationMode.wrappedValue.isPresented)
-        
     }
 
     var body: some View {
-        Group { // we need to put the `if` in a Group or the compiler won't know what we're returning
-            if presentationMode.wrappedValue.isPresented {
+        // we need to put the `if` in a Group or the compiler won't know what we're returning
+        Group {
+            // is there a way to know if this is presented inside a NavigationView?
+            if presenter.shouldShowDimiss {
                 Content(presenter: presenter)
                     .navigationBarItems(
                         trailing: Button(

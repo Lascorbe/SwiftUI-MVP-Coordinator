@@ -6,8 +6,8 @@
 import SwiftUI
 
 enum DetailRedFactory {
-    static func make<T: DetailRedBaseCoordinator>(with viewModel: DetailRedViewModel?, coordinator: T) -> some View {
-        let presenter = DetailRedPresenter(viewModel: viewModel, coordinator: coordinator)
+    static func make<T: DetailRedBaseCoordinator>(with viewModel: DetailRedViewModel?, coordinator: T, shouldShowDimiss: Bool = false) -> some View {
+        let presenter = DetailRedPresenter(viewModel: viewModel, coordinator: coordinator, shouldShowDimiss: shouldShowDimiss)
         let view = DetailRedView(presenter: presenter)
         return view
     }
