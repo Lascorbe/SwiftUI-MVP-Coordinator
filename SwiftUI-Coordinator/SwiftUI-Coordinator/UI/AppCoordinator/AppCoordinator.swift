@@ -5,17 +5,18 @@
 
 import SwiftUI
 
-struct MasterRootCoordinator: UIKitCoordinating {
+struct AppCoordinator: UIKitCoordinating {
     weak var window: UIWindow?
     
     init(window: UIWindow) {
         self.window = window
     }
     
-    func present() {
+    func start() {
         let view = MasterFactory.make()
         let navigation = NavigationView { view }
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
+        window?.makeKeyAndVisible()
     }
 }
