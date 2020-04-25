@@ -35,6 +35,7 @@ final class MasterRootCoordinator: MasterBaseCoordinator {
     func start() -> some ReturnWrapper {
         let view = MasterFactory.make(with: MasterViewModel(dates: [Date()]), coordinator: self)
         let navigation = NavigationView { view }
+//            .navigationViewStyle(StackNavigationViewStyle())
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
         window?.makeKeyAndVisible()

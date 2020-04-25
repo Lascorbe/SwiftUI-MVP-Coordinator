@@ -105,10 +105,11 @@ struct NavigationReturnWrapper<T: View>: ReturnWrapper {
     
     @Binding var isPresented: Bool
     var destination: T
+    var isDetailLink: Bool = true
     
     var body: some View {
         NavigationLink(destination: destination, isActive: $isPresented) {
             EmptyView()
-        }
+        }.isDetailLink(isDetailLink)
     }
 }

@@ -42,6 +42,8 @@ class DetailRedModalCoordinator: DetailRedBaseCoordinator {
     @discardableResult
     func start() -> some ReturnWrapper {
         let view = DetailRedFactory.make(with: viewModel, coordinator: self)
-        return ModalReturnWrapper(isPresented: isPresented, destination: NavigationView { view })
+        let destination = NavigationView { view }
+            .navigationViewStyle(StackNavigationViewStyle())
+        return ModalReturnWrapper(isPresented: isPresented, destination: destination)
     }
 }
