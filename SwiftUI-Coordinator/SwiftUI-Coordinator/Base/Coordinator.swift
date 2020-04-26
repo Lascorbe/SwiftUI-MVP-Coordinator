@@ -5,38 +5,12 @@
 
 import SwiftUI
 
-protocol Coordinating {
-    associatedtype SwiftUIView: View
-}
-
-protocol NavigationLinkCoordinating: Coordinating {
-    associatedtype T: ViewModel
-    associatedtype U: View
-    func present(viewModel: T, tag: Int, selection: Binding<Int?>) -> U
-}
-
-protocol ModalCoordinating: Coordinating {
-    associatedtype T: ViewModel
-    associatedtype U: ReturnWrapper
-    func present(viewModel: T, isPresented: Binding<Bool>) -> U
-}
-
-protocol UIKitCoordinating {
-//    var childs: [UIKitCoordinating] { get }
-    func start()
-}
-
-protocol BaseCoordinator: AssociatedObjects {
+protocol BaseCoordinator: AssociatedObject {
     associatedtype U: ReturnWrapper
     func start() -> U
 }
 
-// Mixin Extension
-
-private var identifierKey: UInt8 = 0
-private var childsKey: UInt8 = 0
-
-extension BaseCoordinator {
+extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
     private var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
@@ -76,6 +50,10 @@ extension BaseCoordinator {
         return coordinator.start()
     }
 }
+
+private var identifierKey: UInt8 = 0
+private var childsKey: UInt8 = 0
+private var parentKey: UInt8 = 0
 
 // MARK: - Return Wrappers
 

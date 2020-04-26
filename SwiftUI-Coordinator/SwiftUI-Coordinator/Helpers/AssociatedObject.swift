@@ -5,7 +5,7 @@ import Foundation
 // If you want to know more, there're a great explanation by my friend Luis Recuenco here: https://jobandtalent.engineering/the-power-of-mixins-in-swift-f9013254c503
 // which is where I got this handy protocol. So all credits to them!
 
-protocol AssociatedObjects: class {
+protocol AssociatedObject: class {
     func associatedObject<T>(for key: UnsafeRawPointer) -> T?
     func setAssociatedObject<T>(
         _ object: T,
@@ -13,7 +13,7 @@ protocol AssociatedObjects: class {
         policy: AssociationPolicy
     )
 }
-extension AssociatedObjects {
+extension AssociatedObject {
     func associatedObject<T>(for key: UnsafeRawPointer) -> T? {
         return objc_getAssociatedObject(self, key) as? T
     }
