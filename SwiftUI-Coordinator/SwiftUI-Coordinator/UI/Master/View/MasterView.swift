@@ -120,6 +120,6 @@ struct MasterView_Previews: PreviewProvider {
     }()
     
     static var previews: some View {
-        return MasterFactory.make(with: MasterViewModel(dates: dates), coordinator: MasterRootCoordinator<AppCoordinator>(window: nil))
+        return MasterFactory.make(with: MasterViewModel(dates: dates), coordinator: RootMasterCoordinator<AppCoordinator>(window: nil))
     }
 }

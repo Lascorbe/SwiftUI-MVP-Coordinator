@@ -24,7 +24,7 @@ extension MasterCoordinator {
     }
 }
 
-final class MasterRootCoordinator<P: Coordinator>: MasterCoordinator {
+final class RootMasterCoordinator<P: Coordinator>: MasterCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow?) {

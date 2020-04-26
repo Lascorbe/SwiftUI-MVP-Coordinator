@@ -16,7 +16,7 @@ class AppCoordinator: Coordinator {
     
     @discardableResult
     func start() -> some View {
-        let coordinator = MasterRootCoordinator<AppCoordinator>(window: window)
+        let coordinator = RootMasterCoordinator<AppCoordinator>(window: window)
         return coordinator.coordinate(to: coordinator)
     }
 }
