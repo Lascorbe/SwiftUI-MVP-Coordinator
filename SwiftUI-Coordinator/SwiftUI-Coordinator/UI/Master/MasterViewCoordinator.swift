@@ -10,17 +10,17 @@ protocol MasterBaseCoordinator: BaseCoordinator {}
 extension MasterBaseCoordinator {
     func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
     
     func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailRedCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
     
     func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailRedModalCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
 }
 
