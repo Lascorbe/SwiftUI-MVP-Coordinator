@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-class AppCoordinator: Coordinator {
+final class AppCoordinator: Coordinator {
     typealias P = AppCoordinator
     
     weak var window: UIWindow?
