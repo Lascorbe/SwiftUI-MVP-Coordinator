@@ -30,6 +30,14 @@ final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
          coordinator: C) {
         self.viewModel = viewModel
         self.coordinator = coordinator
+        bindViewModel()
+    }
+    
+    func bindViewModel() {
+        // You may want to bind your viewModel to a service/DB here
+        //
+        // Probably thourght a UseCase or Interactor. I wouldn't do
+        // a direct request here.
     }
     
     func add() {

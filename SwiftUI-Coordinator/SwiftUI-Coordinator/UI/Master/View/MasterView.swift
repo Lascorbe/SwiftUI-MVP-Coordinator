@@ -27,6 +27,8 @@ struct MasterView<T: MasterPresenting>: View {
                     Image(systemName: "plus")
                 }
             )
+            // .onAppear: excuted everytime you come back from a NavigationLink,
+            //            but it doesn't run after coming back from a Modal (.sheet) 🤷🏻‍♂️
     }
 }
 
