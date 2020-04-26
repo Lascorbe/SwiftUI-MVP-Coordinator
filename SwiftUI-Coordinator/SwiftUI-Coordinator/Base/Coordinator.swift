@@ -5,19 +5,11 @@
 
 import SwiftUI
 
-protocol BaseCoordinator: AssociatedObject {}
-
-protocol StartCoordinator: BaseCoordinator {
-    associatedtype U: ReturnWrapper
+protocol BaseCoordinator: AssociatedObject {
+    associatedtype U: View
+    associatedtype P: BaseCoordinator
     func start() -> U
 }
-
-protocol StopCoordinator: BaseCoordinator {
-    associatedtype P: StopCoordinator
-    func stop()
-}
-
-protocol FinalCoordinator: StartCoordinator, StopCoordinator {}
 
 extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
     fileprivate var identifier: UUID {
@@ -33,51 +25,19 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    fileprivate var childs: [UUID: Any] {
-        get {
-            guard let childs: [UUID: Any] = associatedObject(for: &childsKey) else {
-                self.childs = [UUID: Any]()
-                return self.childs
-            }
-            return childs
-        }
-        set {
-            setAssociatedObject(newValue, for: &childsKey)
-        }
+    var parent: P? {
+        get { associatedObject(for: &parentKey) }
+        set { setAssociatedObject(newValue, for: &parentKey) }
     }
     
-    fileprivate func store<T: BaseCoordinator>(coordinator: T) {
-        childs[coordinator.identifier] = coordinator
-        print(childs)
-    }
-    
-    fileprivate func free<T: BaseCoordinator>(coordinator: T) {
-        childs[coordinator.identifier] = nil
-        print(childs)
-    }
-}
-    
-extension FinalCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    func coordinate<T: FinalCoordinator>(to coordinator: T) -> some ReturnWrapper {
-        store(coordinator: coordinator)
+    func coordinate<T: BaseCoordinator>(to coordinator: T) -> some View {
+        _ = coordinator.identifier // generate identifier
         coordinator.parent = self as? T.P
         return coordinator.start()
     }
 }
 
-extension StopCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    fileprivate var parent: P? {
-        get { associatedObject(for: &childsKey) }
-        set { setAssociatedObject(newValue, for: &childsKey) }
-    }
-    
-    func stop() {
-        parent?.free(coordinator: self)
-    }
-}
-
 private var identifierKey: UInt8 = 0
-private var childsKey: UInt8 = 0
 private var parentKey: UInt8 = 0
 
 // MARK: - Return Wrappers

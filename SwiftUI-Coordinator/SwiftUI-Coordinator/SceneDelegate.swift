@@ -5,7 +5,7 @@
 
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let coordinator = AppCoordinator(window: window)
-            coordinator.presentRoot()
+            coordinator.start()
             self.window = window
         }
     }

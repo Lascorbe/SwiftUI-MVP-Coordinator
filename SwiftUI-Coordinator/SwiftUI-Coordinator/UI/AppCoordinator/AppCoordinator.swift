@@ -5,18 +5,7 @@
 
 import SwiftUI
 
-protocol AppBaseCoordinator: FinalCoordinator {
-    var window: UIWindow? { get }
-}
-    
-extension AppBaseCoordinator {
-    func presentRoot() -> some ReturnWrapper {
-        let coordinator = MasterRootCoordinator<Self>(window: window)
-        return coordinator.coordinate(to: coordinator)
-    }
-}
-
-class AppCoordinator: AppBaseCoordinator {
+class AppCoordinator: BaseCoordinator {
     typealias P = AppCoordinator
     
     weak var window: UIWindow?
@@ -25,8 +14,10 @@ class AppCoordinator: AppBaseCoordinator {
         self.window = window
     }
     
-    func start() -> some ReturnWrapper {
-        return EmptyReturnWrapper()
+    @discardableResult
+    func start() -> some View {
+        let coordinator = MasterRootCoordinator<AppCoordinator>(window: window)
+        return coordinator.coordinate(to: coordinator)
     }
 }
 

@@ -5,26 +5,26 @@
 
 import SwiftUI
 
-protocol MasterBaseCoordinator: FinalCoordinator {}
+protocol MasterBaseCoordinator: BaseCoordinator {}
 
 extension MasterBaseCoordinator {
-    func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+    func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some View {
         let coordinator = DetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
-    func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+    func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some View {
         let coordinator = DetailRedCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
-    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
+    func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some View {
         let coordinator = DetailRedModalCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-final class MasterRootCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
+final class MasterRootCoordinator<P: BaseCoordinator>: MasterBaseCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow?) {
@@ -32,18 +32,20 @@ final class MasterRootCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
     }
     
     @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() -> some View {
         let view = MasterFactory.make(with: MasterViewModel(dates: [Date()]), coordinator: self)
         let navigation = NavigationView { view }
+        // Looks like using StackNavigationViewStyle on the root view controller
+        // doesn't work as expected on iPad 🤷🏻‍♂️
 //            .navigationViewStyle(StackNavigationViewStyle())
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
         window?.makeKeyAndVisible()
-        return EmptyReturnWrapper(destination: EmptyView())
+        return EmptyReturnWrapper(destination: EmptyView()) // we have to return something
     }
 }
 
-final class MasterCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
+final class MasterCoordinator<P: BaseCoordinator>: MasterBaseCoordinator {
     private let viewModel: MasterViewModel?
     private var isPresented: Binding<Bool>
     
@@ -53,20 +55,18 @@ final class MasterCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
     }
     
     @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() -> some View {
         // Is there a better way to do this if?
         if let viewModel = viewModel {
-            return NavigationReturnWrapper(isPresented: isPresented,
-                                           destination: MasterFactory.make(with: viewModel, coordinator: self)
-                                            .onDisappear(perform: { [weak self] in
-                                                self?.stop()
-                                            }))
+            let view = MasterFactory.make(with: viewModel, coordinator: self)
+            return NavigationLink(destination: view, isActive: isPresented) {
+                EmptyView()
+            }
         } else {
-            return NavigationReturnWrapper(isPresented: isPresented,
-                                           destination: MasterFactory.make(coordinator: self)
-                                            .onDisappear(perform: { [weak self] in
-                                                self?.stop()
-                                            }))
+            let view = MasterFactory.make(coordinator: self)
+            return NavigationLink(destination: view, isActive: isPresented) {
+                EmptyView()
+            }
         }
     }
 }

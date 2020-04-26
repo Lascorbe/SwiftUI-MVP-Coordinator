@@ -12,10 +12,10 @@ protocol DetailRedPresenting: ObservableObject {
     func buttonPressed(isActive: Binding<Bool>) -> U
 }
 
-class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting {
+final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting {
     @Published private(set) var viewModel: DetailRedViewModel? {
         didSet {
-            print(viewModel!)
+            print(viewModel ?? "\(self) viewModel is nil")
         }
     }
     

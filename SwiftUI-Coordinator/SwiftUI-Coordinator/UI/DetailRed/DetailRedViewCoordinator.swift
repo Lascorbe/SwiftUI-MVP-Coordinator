@@ -5,16 +5,16 @@
 
 import SwiftUI
 
-protocol DetailRedBaseCoordinator: FinalCoordinator {}
+protocol DetailRedBaseCoordinator: BaseCoordinator {}
 
 extension DetailRedBaseCoordinator {
-    func presentNextView(viewModel: DetailViewModel?, isPresented: Binding<Bool>) -> some ReturnWrapper {
+    func presentNextView(viewModel: DetailViewModel?, isPresented: Binding<Bool>) -> some View {
         let coordinator = DetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-class DetailRedCoordinator<P: FinalCoordinator>: DetailRedBaseCoordinator {
+final class DetailRedCoordinator<P: BaseCoordinator>: DetailRedBaseCoordinator {
     private let viewModel: DetailRedViewModel?
     private var isPresented: Binding<Bool>
     
@@ -24,16 +24,15 @@ class DetailRedCoordinator<P: FinalCoordinator>: DetailRedBaseCoordinator {
     }
     
     @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() -> some View {
         let view = DetailRedFactory.make(with: viewModel, coordinator: self)
-            .onDisappear(perform: { [weak self] in
-                self?.stop()
-            })
-        return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+        return NavigationLink(destination: view, isActive: isPresented) {
+            EmptyView()
+        }
     }
 }
 
-class DetailRedModalCoordinator<P: FinalCoordinator>: DetailRedBaseCoordinator {
+final class DetailRedModalCoordinator<P: BaseCoordinator>: DetailRedBaseCoordinator {
     private let viewModel: DetailRedViewModel?
     private var isPresented: Binding<Bool>
     
@@ -43,10 +42,15 @@ class DetailRedModalCoordinator<P: FinalCoordinator>: DetailRedBaseCoordinator {
     }
     
     @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() -> some View {
         let view = DetailRedFactory.make(with: viewModel, coordinator: self, shouldShowDimiss: true)
         let destination = NavigationView { view }
-            .navigationViewStyle(StackNavigationViewStyle())
+        // we need this so on iPad it looks good, using all the space,
+        // but turns out that doing this makes the MasterView back button dissapear
+        // if we present it in the modal stack (run and press "Go Detail Red Modal" > "Date" > "Date" > MasterView)
+//            .navigationViewStyle(StackNavigationViewStyle())
+        
+        // Showing how ModalReturnWrapper works
         return ModalReturnWrapper(isPresented: isPresented, destination: destination)
     }
 }

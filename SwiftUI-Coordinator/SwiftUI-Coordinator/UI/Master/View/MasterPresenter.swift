@@ -17,7 +17,7 @@ protocol MasterPresenting: ObservableObject {
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> U3
 }
 
-class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
+final class MasterPresenter<C: MasterBaseCoordinator>: MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
             print(viewModel)

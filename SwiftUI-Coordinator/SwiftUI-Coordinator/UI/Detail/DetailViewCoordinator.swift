@@ -5,16 +5,16 @@
 
 import SwiftUI
 
-protocol DetailBaseCoordinator: FinalCoordinator {}
+protocol DetailBaseCoordinator: BaseCoordinator {}
 
 extension DetailBaseCoordinator {
-    func presentNextView(isPresented: Binding<Bool>) -> some ReturnWrapper {
+    func presentNextView(isPresented: Binding<Bool>) -> some View {
         let coordinator = MasterCoordinator<Self>(viewModel: nil, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-class DetailCoordinator<P: FinalCoordinator>: DetailBaseCoordinator {
+final class DetailCoordinator<P: BaseCoordinator>: DetailBaseCoordinator {
     private let viewModel: DetailViewModel?
     private var isPresented: Binding<Bool>
     
@@ -24,11 +24,9 @@ class DetailCoordinator<P: FinalCoordinator>: DetailBaseCoordinator {
     }
     
     @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() -> some View {
         let view = DetailFactory.make(with: viewModel, coordinator: self)
-            .onDisappear(perform: { [weak self] in
-                self?.stop()
-            })
+        // Showing how NavigationReturnWrapper works
         return NavigationReturnWrapper(isPresented: isPresented, destination: view)
     }
 }
