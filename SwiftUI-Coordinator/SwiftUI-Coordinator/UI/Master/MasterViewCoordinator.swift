@@ -5,22 +5,20 @@
 
 import SwiftUI
 
-protocol MasterBaseCoordinator: BaseCoordinator {}
-
-extension MasterBaseCoordinator {
+class MasterBaseCoordinator: Coordinator {
     func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
     
     func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailRedCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
     
     func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = DetailRedModalCoordinator(viewModel: viewModel, isPresented: isPresented)
-        return coordinator.start()
+        return coordinate(to: coordinator)
     }
 }
 
@@ -31,15 +29,14 @@ final class MasterRootCoordinator: MasterBaseCoordinator {
         self.window = window
     }
     
-    @discardableResult
-    func start() -> some ReturnWrapper {
+    override var start: some ReturnWrapper {
         let view = MasterFactory.make(with: MasterViewModel(dates: [Date()]), coordinator: self)
         let navigation = NavigationView { view }
 //            .navigationViewStyle(StackNavigationViewStyle())
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
         window?.makeKeyAndVisible()
-        return EmptyReturnWrapper(destination: EmptyView())
+        return EmptyReturnWrapper()
     }
 }
 
@@ -70,9 +67,8 @@ final class MasterCoordinator: MasterBaseCoordinator {
 // The rest of the SwiftUI navigation should be done through NavigationReturnWrapper and ModalReturnWrapper
 // which you can find on Coordinator.swift
 
-struct EmptyReturnWrapper<T: View>: ReturnWrapper {
-    typealias DestinationView = T
-    var destination: T
+struct EmptyReturnWrapper: ReturnWrapper {
+    var destination = EmptyView()
     
     var body: some View {
         EmptyView()

@@ -5,49 +5,37 @@
 
 import SwiftUI
 
-protocol BaseCoordinator: AssociatedObject {
+protocol BaseCoordinator {
     associatedtype U: ReturnWrapper
-    func start() -> U
+    var start: U { get }
 }
 
-extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    private var identifier: UUID {
-        get {
-            guard let identifier: UUID = associatedObject(for: &identifierKey) else {
-                self.identifier = UUID()
-                return self.identifier
-            }
-            return identifier
-        }
-        set {
-            setAssociatedObject(newValue, for: &identifierKey)
-        }
-    }
+class Coordinator {
+    private var identifier: UUID = UUID()
+    private var childs: [UUID: Coordinator] = [:]
+    private(set) var parent: Coordinator?
     
-    private var childs: [UUID: Any] {
-        get {
-            guard let childs: [UUID: Any] = associatedObject(for: &childsKey) else {
-                self.childs = [UUID: Any]()
-                return self.childs
-            }
-            return childs
-        }
-        set {
-            setAssociatedObject(newValue, for: &childsKey)
-        }
-    }
-    
-    private func store<T: BaseCoordinator>(coordinator: T) {
+    private func store(coordinator: Coordinator) {
         childs[coordinator.identifier] = coordinator
     }
     
-    private func free<T: BaseCoordinator>(coordinator: T) {
+    private func free(coordinator: Coordinator) {
         childs[coordinator.identifier] = nil
     }
     
-    func coordinate<T: BaseCoordinator>(to coordinator: T) -> some ReturnWrapper {
+    func coordinate(to coordinator: Coordinator) -> some ReturnWrapper {
         store(coordinator: coordinator)
-        return coordinator.start()
+        coordinator.parent = self
+        return coordinator.start
+    }
+    
+    var start: some ReturnWrapper {
+        fatalError("Must override in subclass")
+        return EmptyReturnWrapper() // We need this return coz otherwise `some` throws an error
+    }
+    
+    func stop() {
+        parent?.free(coordinator: self)
     }
 }
 

@@ -5,16 +5,15 @@
 
 import SwiftUI
 
-class AppCoordinator: BaseCoordinator {
+final class AppCoordinator: Coordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow) {
         self.window = window
     }
     
-    @discardableResult
-    func start() -> some ReturnWrapper {
+    func start() {
         let coordinator = MasterRootCoordinator(window: window)
-        return coordinator.coordinate(to: coordinator)
+        _ = coordinate(to: coordinator)
     }
 }

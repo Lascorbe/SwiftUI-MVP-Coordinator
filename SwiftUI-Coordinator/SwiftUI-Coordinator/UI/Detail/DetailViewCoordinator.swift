@@ -5,16 +5,14 @@
 
 import SwiftUI
 
-protocol DetailBaseCoordinator: BaseCoordinator {}
-
-extension DetailBaseCoordinator {
+class DetailBaseCoordinator: Coordinator {
     func presentNextView(isPresented: Binding<Bool>) -> some ReturnWrapper {
         let coordinator = MasterCoordinator(viewModel: nil, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-class DetailCoordinator: DetailBaseCoordinator {
+final class DetailCoordinator: DetailBaseCoordinator {
     private let viewModel: DetailViewModel?
     private var isPresented: Binding<Bool>
     
