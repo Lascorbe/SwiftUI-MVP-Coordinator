@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let coordinator = AppCoordinator(window: window)
-            coordinator.start()
+            coordinator.presentRoot()
             self.window = window
         }
     }

@@ -5,26 +5,26 @@
 
 import SwiftUI
 
-protocol MasterBaseCoordinator: BaseCoordinator {}
+protocol MasterBaseCoordinator: FinalCoordinator {}
 
 extension MasterBaseCoordinator {
     func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        let coordinator = DetailCoordinator(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = DetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
     func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        let coordinator = DetailRedCoordinator(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = DetailRedCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
     func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some ReturnWrapper {
-        let coordinator = DetailRedModalCoordinator(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = DetailRedModalCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-final class MasterRootCoordinator: MasterBaseCoordinator {
+final class MasterRootCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow?) {
@@ -43,7 +43,7 @@ final class MasterRootCoordinator: MasterBaseCoordinator {
     }
 }
 
-final class MasterCoordinator: MasterBaseCoordinator {
+final class MasterCoordinator<P: FinalCoordinator>: MasterBaseCoordinator {
     private let viewModel: MasterViewModel?
     private var isPresented: Binding<Bool>
     
@@ -56,25 +56,17 @@ final class MasterCoordinator: MasterBaseCoordinator {
     func start() -> some ReturnWrapper {
         // Is there a better way to do this if?
         if let viewModel = viewModel {
-            let view = MasterFactory.make(with: viewModel, coordinator: self)
-            return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+            return NavigationReturnWrapper(isPresented: isPresented,
+                                           destination: MasterFactory.make(with: viewModel, coordinator: self)
+                                            .onDisappear(perform: { [weak self] in
+                                                self?.stop()
+                                            }))
         } else {
-            let view = MasterFactory.make(coordinator: self)
-            return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+            return NavigationReturnWrapper(isPresented: isPresented,
+                                           destination: MasterFactory.make(coordinator: self)
+                                            .onDisappear(perform: { [weak self] in
+                                                self?.stop()
+                                            }))
         }
-    }
-}
-
-// We need this wrapper just for the sake of making all the Coordinators conform to the same protocol (BaseCoordinator),
-// since the 1st coordinator must rely on UIKit, we are just going to return an empty ReturnWrapper.
-// The rest of the SwiftUI navigation should be done through NavigationReturnWrapper and ModalReturnWrapper
-// which you can find on Coordinator.swift
-
-struct EmptyReturnWrapper<T: View>: ReturnWrapper {
-    typealias DestinationView = T
-    var destination: T
-    
-    var body: some View {
-        EmptyView()
     }
 }

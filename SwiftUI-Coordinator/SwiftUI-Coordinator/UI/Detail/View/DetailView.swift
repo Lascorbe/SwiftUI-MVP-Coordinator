@@ -38,6 +38,6 @@ struct DetailView_Previews: PreviewProvider {
     @State static var isActive = false
     
     static var previews: some View {
-        return DetailFactory.make(with: DetailViewModel(date: Date()), coordinator: DetailCoordinator(viewModel: nil, isPresented: $isActive))
+        return DetailFactory.make(with: DetailViewModel(date: Date()), coordinator: DetailCoordinator<AppCoordinator>(viewModel: nil, isPresented: $isActive))
     }
 }

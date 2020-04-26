@@ -76,6 +76,6 @@ struct DetailRedView_Previews: PreviewProvider {
     @State static var isActive = false
     
     static var previews: some View {
-        return DetailRedFactory.make(with: DetailRedViewModel(date: Date()), coordinator: DetailRedCoordinator(viewModel: nil, isPresented: $isActive))
+        return DetailRedFactory.make(with: DetailRedViewModel(date: Date()), coordinator: DetailRedCoordinator<AppCoordinator>(viewModel: nil, isPresented: $isActive))
     }
 }

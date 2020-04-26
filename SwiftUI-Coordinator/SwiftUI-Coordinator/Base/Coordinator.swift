@@ -5,13 +5,22 @@
 
 import SwiftUI
 
-protocol BaseCoordinator: AssociatedObject {
+protocol BaseCoordinator: AssociatedObject {}
+
+protocol StartCoordinator: BaseCoordinator {
     associatedtype U: ReturnWrapper
     func start() -> U
 }
 
+protocol StopCoordinator: BaseCoordinator {
+    associatedtype P: StopCoordinator
+    func stop()
+}
+
+protocol FinalCoordinator: StartCoordinator, StopCoordinator {}
+
 extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    private var identifier: UUID {
+    fileprivate var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -24,7 +33,7 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    private var childs: [UUID: Any] {
+    fileprivate var childs: [UUID: Any] {
         get {
             guard let childs: [UUID: Any] = associatedObject(for: &childsKey) else {
                 self.childs = [UUID: Any]()
@@ -37,17 +46,33 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    private func store<T: BaseCoordinator>(coordinator: T) {
+    fileprivate func store<T: BaseCoordinator>(coordinator: T) {
         childs[coordinator.identifier] = coordinator
+        print(childs)
     }
     
-    private func free<T: BaseCoordinator>(coordinator: T) {
+    fileprivate func free<T: BaseCoordinator>(coordinator: T) {
         childs[coordinator.identifier] = nil
+        print(childs)
+    }
+}
+    
+extension FinalCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+    func coordinate<T: FinalCoordinator>(to coordinator: T) -> some ReturnWrapper {
+        store(coordinator: coordinator)
+        coordinator.parent = self as? T.P
+        return coordinator.start()
+    }
+}
+
+extension StopCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+    fileprivate var parent: P? {
+        get { associatedObject(for: &childsKey) }
+        set { setAssociatedObject(newValue, for: &childsKey) }
     }
     
-    func coordinate<T: BaseCoordinator>(to coordinator: T) -> some ReturnWrapper {
-        store(coordinator: coordinator)
-        return coordinator.start()
+    func stop() {
+        parent?.free(coordinator: self)
     }
 }
 
