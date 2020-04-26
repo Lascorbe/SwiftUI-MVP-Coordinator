@@ -6,7 +6,7 @@
 import SwiftUI
 
 enum DetailFactory {
-    static func make<T: DetailBaseCoordinator>(with viewModel: DetailViewModel?, coordinator: T) -> some View {
+    static func make<T: DetailCoordinator>(with viewModel: DetailViewModel?, coordinator: T) -> some View {
         let presenter = DetailPresenter(viewModel: viewModel, coordinator: coordinator)
         let view = DetailView(presenter: presenter)
         return view

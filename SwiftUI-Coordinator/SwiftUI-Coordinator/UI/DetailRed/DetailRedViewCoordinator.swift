@@ -5,16 +5,16 @@
 
 import SwiftUI
 
-protocol DetailRedBaseCoordinator: BaseCoordinator {}
+protocol DetailRedBaseCoordinator: Coordinator {}
 
 extension DetailRedBaseCoordinator {
     func presentNextView(viewModel: DetailViewModel?, isPresented: Binding<Bool>) -> some View {
-        let coordinator = DetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = NavigationDetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-final class DetailRedCoordinator<P: BaseCoordinator>: DetailRedBaseCoordinator {
+final class NavigationDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordinator {
     private let viewModel: DetailRedViewModel?
     private var isPresented: Binding<Bool>
     
@@ -32,7 +32,7 @@ final class DetailRedCoordinator<P: BaseCoordinator>: DetailRedBaseCoordinator {
     }
 }
 
-final class DetailRedModalCoordinator<P: BaseCoordinator>: DetailRedBaseCoordinator {
+final class ModalDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordinator {
     private let viewModel: DetailRedViewModel?
     private var isPresented: Binding<Bool>
     

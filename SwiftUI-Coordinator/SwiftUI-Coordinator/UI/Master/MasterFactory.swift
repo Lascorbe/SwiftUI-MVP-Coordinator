@@ -6,7 +6,7 @@
 import SwiftUI
 
 enum MasterFactory {
-    static func make<T: MasterBaseCoordinator>(with viewModel: MasterViewModel = MasterViewModel(dates: []), coordinator: T) -> some View {
+    static func make<T: MasterCoordinator>(with viewModel: MasterViewModel = MasterViewModel(dates: []), coordinator: T) -> some View {
         let presenter = MasterPresenter(viewModel: viewModel, coordinator: coordinator)
         let view = MasterView(presenter: presenter)
         return view

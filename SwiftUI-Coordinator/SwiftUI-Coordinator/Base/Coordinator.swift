@@ -5,13 +5,13 @@
 
 import SwiftUI
 
-protocol BaseCoordinator: AssociatedObject {
+protocol Coordinator: AssociatedObject {
     associatedtype U: View
-    associatedtype P: BaseCoordinator
+    associatedtype P: Coordinator
     func start() -> U
 }
 
-extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
     fileprivate var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
@@ -30,7 +30,7 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         set { setAssociatedObject(newValue, for: &parentKey) }
     }
     
-    func coordinate<T: BaseCoordinator>(to coordinator: T) -> some View {
+    func coordinate<T: Coordinator>(to coordinator: T) -> some View {
         _ = coordinator.identifier // generate identifier
         coordinator.parent = self as? T.P
         return coordinator.start()

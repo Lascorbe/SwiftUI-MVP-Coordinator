@@ -5,26 +5,26 @@
 
 import SwiftUI
 
-protocol MasterBaseCoordinator: BaseCoordinator {}
+protocol MasterCoordinator: Coordinator {}
 
-extension MasterBaseCoordinator {
+extension MasterCoordinator {
     func presentDetailView(viewModel: DetailViewModel, isPresented: Binding<Bool>) -> some View {
-        let coordinator = DetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = NavigationDetailCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
     func presentDetailRedView(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some View {
-        let coordinator = DetailRedCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = NavigationDetailRedCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
     
     func presentDetailRedViewInModal(viewModel: DetailRedViewModel, isPresented: Binding<Bool>) -> some View {
-        let coordinator = DetailRedModalCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
+        let coordinator = ModalDetailRedCoordinator<Self>(viewModel: viewModel, isPresented: isPresented)
         return coordinate(to: coordinator)
     }
 }
 
-final class MasterRootCoordinator<P: BaseCoordinator>: MasterBaseCoordinator {
+final class MasterRootCoordinator<P: Coordinator>: MasterCoordinator {
     weak var window: UIWindow?
     
     init(window: UIWindow?) {
@@ -45,7 +45,7 @@ final class MasterRootCoordinator<P: BaseCoordinator>: MasterBaseCoordinator {
     }
 }
 
-final class MasterCoordinator<P: BaseCoordinator>: MasterBaseCoordinator {
+final class NavigationMasterCoordinator<P: Coordinator>: MasterCoordinator {
     private let viewModel: MasterViewModel?
     private var isPresented: Binding<Bool>
     
