@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct NavigationButton<CV: View, NV: View>: View {
-    @State var isPresented = false
+    @State private var isPresented = false
     
     var contentView: CV
     var navigationView: (Binding<Bool>) -> NV
@@ -16,7 +16,7 @@ struct NavigationButton<CV: View, NV: View>: View {
             self.isPresented = true
         }) {
             contentView
-                .withNavigation(to:
+                .background(
                     navigationView($isPresented)
                 )
         }
