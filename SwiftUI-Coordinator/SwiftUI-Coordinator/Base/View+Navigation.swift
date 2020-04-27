@@ -16,7 +16,7 @@ struct NavigationButton<CV: View, NV: View>: View {
             self.isPresented = true
         }) {
             contentView
-                .background(
+                .withNavigation(to:
                     navigationView($isPresented)
                 )
         }
