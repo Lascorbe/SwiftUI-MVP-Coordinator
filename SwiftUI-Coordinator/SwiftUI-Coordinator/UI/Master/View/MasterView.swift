@@ -60,46 +60,30 @@ private struct Row<T: MasterPresenting>: View {
     
     var date: Date
     
-    @State private var isPresented1 = false
-    @State private var isPresented2 = false
-    @State private var isPresented3 = false
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("\(date, formatter: dateFormatter)")
                     .padding(.bottom)
                 
-                Button(action: {
-                    self.isPresented1 = true
-                }) {
-                    Text("Go Detail")
-                        .withNavigation(to:
-                            self.presenter.firstSelected(date: date, isPresented: $isPresented1)
-                        )
-                }
+                NavigationButton(contentView: Text("Go Detail"),
+                                 navigationView: { isPresented in
+                                    self.presenter.firstSelected(date: self.date, isPresented: isPresented)
+                })
                 .foregroundColor(Color.green)
                 .padding(.bottom)
                 
-                Button(action: {
-                    self.isPresented2 = true
-                }) {
-                    Text("Go Detail Red")
-                        .withNavigation(to:
-                            self.presenter.secondSelected(date: date, isPresented: $isPresented2)
-                        )
-                }
+                NavigationButton(contentView: Text("Go Detail Red"),
+                                 navigationView: { isPresented in
+                                    self.presenter.secondSelected(date: self.date, isPresented: isPresented)
+                })
                 .foregroundColor(Color.red)
                 .padding(.bottom)
                 
-                Button(action: {
-                    self.isPresented3 = true
-                }) {
-                    Text("Go Detail Red Modal")
-                        .withNavigation(to:
-                            self.presenter.modalSelected(date: date, isPresented: $isPresented3)
-                        )
-                }
+                NavigationButton(contentView: Text("Go Detail Red Modal"),
+                                 navigationView: { isPresented in
+                                    self.presenter.modalSelected(date: self.date, isPresented: isPresented)
+                })
                 .foregroundColor(Color.red)
             }
             Spacer()

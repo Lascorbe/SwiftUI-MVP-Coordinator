@@ -5,6 +5,24 @@
 
 import SwiftUI
 
+struct NavigationButton<CV: View, NV: View>: View {
+    @State var isPresented = false
+    
+    var contentView: CV
+    var navigationView: (Binding<Bool>) -> NV
+    
+    var body: some View {
+        Button(action: {
+            self.isPresented = true
+        }) {
+            contentView
+                .withNavigation(to:
+                    navigationView($isPresented)
+                )
+        }
+    }
+}
+
 extension View {
     func withNavigation<T: View>(to destination: T) -> some View {
         background(destination)

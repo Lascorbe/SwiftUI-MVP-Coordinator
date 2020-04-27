@@ -21,25 +21,35 @@ struct DetailRedView<T: DetailRedPresenting>: View {
     }
 
     var body: some View {
-        // we need to put the `if` in a Group or the compiler won't know what we're returning
+        // we need to put the `if` in a Group, or the compiler won't know what we're returning
         Group {
             // is there a way to know if this is presented inside a NavigationView?
             if presenter.shouldShowDimiss {
                 Content(presenter: presenter)
                     .navigationBarItems(
-                        trailing: Button(
-                            action: {
-                                withAnimation {
-                                    self.presentationMode.wrappedValue.dismiss()
-                                }
-                            })
-                        {
-                            Text("Dismiss")
-                        }
+                        leading: leftButton,
+                        trailing: rightButton
                     )
             } else {
                 Content(presenter: presenter)
             }
+        }
+    }
+    
+    private var leftButton: some View {
+        NavigationButton(contentView: Text("\(presenter.viewModel!.date, formatter: dateFormatter)"),
+                         navigationView: { isPresented in
+                            self.presenter.buttonPressed(isActive: isPresented)
+        })
+    }
+    private var rightButton: some View {
+        Button(
+            action: {
+                withAnimation {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+        }) {
+            Text("Dismiss")
         }
     }
 }
@@ -47,21 +57,15 @@ struct DetailRedView<T: DetailRedPresenting>: View {
 private struct Content<T: DetailRedPresenting>: View {
     @ObservedObject var presenter: T
     
-    @State private var isActive: Bool = false
-    
     var body: some View {
         ZStack {
             Color(UIColor(red: 0.81, green: 0.38, blue: 0.33, alpha: 0.3))
                 .edgesIgnoringSafeArea(.all)
             if presenter.viewModel != nil {
-                Button(action: {
-                    self.isActive.toggle()
-                }) {
-                    Text("\(presenter.viewModel!.date, formatter: dateFormatter)")
-                        .background(
-                            presenter.buttonPressed(isActive: $isActive)
-                        )
-                }
+                NavigationButton(contentView: Text("\(presenter.viewModel!.date, formatter: dateFormatter)"),
+                                 navigationView: { isPresented in
+                                    self.presenter.buttonPressed(isActive: isPresented)
+                })
                 .foregroundColor(Color.blue)
             } else {
                 Text("This view was not presented as a modal")

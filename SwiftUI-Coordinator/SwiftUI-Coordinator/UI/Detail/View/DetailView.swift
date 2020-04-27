@@ -11,20 +11,14 @@ struct DetailView<T: DetailPresenting>: View {
     private var viewModel: DetailViewModel? {
         return presenter.viewModel
     }
-    
-    @State private var isActive: Bool = false
 
     var body: some View {
         Group {
             if viewModel != nil {
-                Button(action: {
-                    self.isActive.toggle()
-                }) {
-                    Text("\(viewModel!.date, formatter: dateFormatter)")
-                        .background(
-                            self.presenter.buttonPressed(isActive: $isActive)
-                    )
-                }
+                NavigationButton(contentView: Text("\(viewModel!.date, formatter: dateFormatter)"),
+                                 navigationView: { isPresented in
+                                    self.presenter.buttonPressed(isActive: isPresented)
+                })
                 .foregroundColor(Color.blue)
             } else {
                 Text("Please select a date")
