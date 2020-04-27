@@ -74,9 +74,9 @@ private struct Row<T: MasterPresenting>: View {
                     self.isPresented1 = true
                 }) {
                     Text("Go Detail")
-                        .background(
+                        .withNavigation(to:
                             self.presenter.firstSelected(date: date, isPresented: $isPresented1)
-                    )
+                        )
                 }
                 .foregroundColor(Color.green)
                 .padding(.bottom)
@@ -85,9 +85,9 @@ private struct Row<T: MasterPresenting>: View {
                     self.isPresented2 = true
                 }) {
                     Text("Go Detail Red")
-                        .background(
+                        .withNavigation(to:
                             self.presenter.secondSelected(date: date, isPresented: $isPresented2)
-                    )
+                        )
                 }
                 .foregroundColor(Color.red)
                 .padding(.bottom)
@@ -96,9 +96,9 @@ private struct Row<T: MasterPresenting>: View {
                     self.isPresented3 = true
                 }) {
                     Text("Go Detail Red Modal")
-                        .background(
+                        .withNavigation(to:
                             self.presenter.modalSelected(date: date, isPresented: $isPresented3)
-                    )
+                        )
                 }
                 .foregroundColor(Color.red)
             }

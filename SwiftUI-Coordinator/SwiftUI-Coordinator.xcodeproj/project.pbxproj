@@ -33,6 +33,7 @@
 		A057FF3724543A62006254F3 /* DetailRedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FF3424543A62006254F3 /* DetailRedView.swift */; };
 		A057FF3824543A62006254F3 /* DetailRedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FF3524543A62006254F3 /* DetailRedPresenter.swift */; };
 		A057FF3A24543D0F006254F3 /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = A057FF3924543D0F006254F3 /* AssociatedObject.swift */; };
+		A06BAE8824572608008B4B07 /* View+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06BAE8724572608008B4B07 /* View+Navigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		A057FF3424543A62006254F3 /* DetailRedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedView.swift; sourceTree = "<group>"; };
 		A057FF3524543A62006254F3 /* DetailRedPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRedPresenter.swift; sourceTree = "<group>"; };
 		A057FF3924543D0F006254F3 /* AssociatedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssociatedObject.swift; sourceTree = "<group>"; };
+		A06BAE8724572608008B4B07 /* View+Navigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+Navigation.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 			children = (
 				A057FF1B24543693006254F3 /* ViewModel.swift */,
 				A057FF1C24543693006254F3 /* Coordinator.swift */,
+				A06BAE8724572608008B4B07 /* View+Navigation.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				A057FF2824543A49006254F3 /* MasterViewModel.swift in Sources */,
 				A057FF1D24543693006254F3 /* ViewModel.swift in Sources */,
 				A057FF3624543A62006254F3 /* DetailRedViewModel.swift in Sources */,
+				A06BAE8824572608008B4B07 /* View+Navigation.swift in Sources */,
 				A057FF2F24543A57006254F3 /* DetailView.swift in Sources */,
 				A057FF1E24543693006254F3 /* Coordinator.swift in Sources */,
 				A057FF3824543A62006254F3 /* DetailRedPresenter.swift in Sources */,
