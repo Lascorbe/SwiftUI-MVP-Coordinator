@@ -12,7 +12,7 @@ protocol Coordinator: AssociatedObject {
 }
 
 extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
-    fileprivate var identifier: UUID {
+    private(set) var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -25,11 +25,13 @@ extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    var parent: P? {
+    private(set) var parent: P? {
         get { associatedObject(for: &parentKey) }
         set { setAssociatedObject(newValue, for: &parentKey) }
     }
+}
     
+extension Coordinator {
     func coordinate<T: Coordinator>(to coordinator: T) -> some View {
         _ = coordinator.identifier // generate identifier
         coordinator.parent = self as? T.P
