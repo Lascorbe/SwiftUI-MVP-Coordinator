@@ -15,7 +15,8 @@ protocol DetailRedPresenting: ObservableObject {
 final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting {
     @Published private(set) var viewModel: DetailRedViewModel? {
         didSet {
-            print(viewModel ?? "\(self) viewModel is nil")
+            let vm = String(describing: viewModel)
+            print("\(self) viewModel: \(vm)")
         }
     }
     

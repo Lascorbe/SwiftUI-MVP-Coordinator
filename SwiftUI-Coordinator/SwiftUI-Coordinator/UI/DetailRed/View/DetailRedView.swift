@@ -37,7 +37,7 @@ struct DetailRedView<T: DetailRedPresenting>: View {
     }
     
     private var leftButton: some View {
-        NavigationButton(contentView: Text("\(presenter.viewModel!.date, formatter: dateFormatter)"),
+        NavigationButton(contentView: Text("Go to Detail"),
                          navigationView: { isPresented in
                             self.presenter.buttonPressed(isActive: isPresented)
         })

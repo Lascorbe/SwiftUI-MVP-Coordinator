@@ -14,7 +14,8 @@ protocol DetailPresenting: ObservableObject {
 final class DetailPresenter<C: DetailCoordinator>: DetailPresenting {
     @Published private(set) var viewModel: DetailViewModel? {
         didSet {
-            print(viewModel ?? "\(self) viewModel is nil")
+            let vm = String(describing: viewModel)
+            print("\(self) viewModel: \(vm)")
         }
     }
     

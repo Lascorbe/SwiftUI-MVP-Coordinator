@@ -20,7 +20,8 @@ protocol MasterPresenting: ObservableObject {
 final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
-            print(viewModel)
+            let vm = String(describing: viewModel)
+            print("\(self) viewModel: \(vm)")
         }
     }
     
