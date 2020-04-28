@@ -14,10 +14,14 @@ final class AppCoordinator: Coordinator {
         self.window = window
     }
     
+    deinit {
+        print("deinit AppCoordinator \(identifier)")
+    }
+    
     @discardableResult
     func start() -> some View {
         let coordinator = RootMasterCoordinator<AppCoordinator>(window: window)
-        return coordinator.coordinate(to: coordinator)
+        return coordinate(to: coordinator)
     }
 }
 
