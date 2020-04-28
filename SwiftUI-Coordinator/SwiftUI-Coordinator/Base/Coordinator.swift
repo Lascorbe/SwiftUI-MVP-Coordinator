@@ -5,22 +5,18 @@
 
 import SwiftUI
 
-protocol BaseCoordinator: AssociatedObject {}
-
-protocol StartCoordinator: BaseCoordinator {
+protocol Coordinator: BaseCoordinator {
     associatedtype U: View
     func start() -> U
 }
 
-protocol StopCoordinator: BaseCoordinator {
-    associatedtype P: StopCoordinator
+protocol BaseCoordinator: AssociatedObject {
+    associatedtype P: BaseCoordinator
     func stop()
 }
 
-protocol Coordinator: StartCoordinator, StopCoordinator {}
-
 extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    fileprivate var identifier: UUID {
+    var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -48,28 +44,23 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
     
     fileprivate func store<T: BaseCoordinator>(coordinator: T) {
         children[coordinator.identifier] = coordinator
-        print(children)
+        print("\(identifier) store children: \(children.count)")
     }
     
     fileprivate func free<T: BaseCoordinator>(coordinator: T) {
-        children[coordinator.identifier] = nil
-        print(children)
+        children.removeValue(forKey: identifier)
+        print("\(identifier) free children: \(children.count)")
     }
-}
-
-extension StopCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+    
     fileprivate weak var parent: P? {
         get { associatedObject(for: &childrenKey) }
         set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
     }
     
-    // We don't need children so do we really need a stop() function working with SwiftUI?
     func stop() {
         parent?.free(coordinator: self)
     }
-}
-
-extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
+    
     func coordinate<T: Coordinator>(to coordinator: T) -> some View {
         store(coordinator: coordinator)
         coordinator.parent = self as? T.P
