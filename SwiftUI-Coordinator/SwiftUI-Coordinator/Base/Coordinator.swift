@@ -63,7 +63,7 @@ extension StopCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
     }
     
-    // do we really need a stop() function working with SwiftUI?
+    // We don't need children so do we really need a stop() function working with SwiftUI?
     func stop() {
         parent?.free(coordinator: self)
     }
