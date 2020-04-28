@@ -33,6 +33,7 @@ final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting
     }
     
     deinit {
+        coordinator?.stop()
         print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
     }
     

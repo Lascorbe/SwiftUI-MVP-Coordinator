@@ -25,7 +25,6 @@ final class NavigationDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordin
     
     deinit {
         print("\(identifier) deinit NavigationDetailRedCoordinator")
-        stop()
     }
     
     @discardableResult

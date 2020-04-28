@@ -25,7 +25,6 @@ final class NavigationDetailCoordinator<P: Coordinator>: DetailCoordinator {
     
     deinit {
         print("\(identifier) deinit NavigationDetailCoordinator")
-        stop()
     }
     
     @discardableResult

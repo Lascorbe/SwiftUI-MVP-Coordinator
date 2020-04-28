@@ -48,7 +48,7 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
     }
     
     fileprivate func free<T: BaseCoordinator>(coordinator: T) {
-        children.removeValue(forKey: identifier)
+        children.removeValue(forKey: coordinator.identifier)
         print("\(identifier) free children: \(children.count)")
     }
     
@@ -58,6 +58,7 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
     }
     
     func stop() {
+        children.removeAll()
         parent?.free(coordinator: self)
     }
     

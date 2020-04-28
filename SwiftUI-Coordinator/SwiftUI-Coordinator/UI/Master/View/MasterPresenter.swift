@@ -35,6 +35,7 @@ final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
     }
     
     deinit {
+        coordinator?.stop()
         print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
     }
     
