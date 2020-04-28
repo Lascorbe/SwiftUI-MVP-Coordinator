@@ -23,6 +23,10 @@ final class NavigationDetailCoordinator<P: Coordinator>: DetailCoordinator {
         self.isPresented = isPresented
     }
     
+    deinit {
+        print("\(identifier) deinit NavigationDetailCoordinator")
+    }
+    
     @discardableResult
     func start() -> some View {
         let view = DetailFactory.make(with: viewModel, coordinator: self)

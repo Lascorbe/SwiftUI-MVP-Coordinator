@@ -15,14 +15,14 @@ protocol DetailRedPresenting: ObservableObject {
 final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting {
     @Published private(set) var viewModel: DetailRedViewModel? {
         didSet {
-            let vm = String(describing: viewModel)
-            print("\(self) viewModel: \(vm)")
+//            let vm = String(describing: viewModel)
+//            print("\(self) viewModel: \(vm)")
         }
     }
     
     private(set) var shouldShowDimiss: Bool
     
-    private let coordinator: C
+    private weak var coordinator: C?
     
     init(viewModel: DetailRedViewModel? = DetailRedViewModel(date: Date()),
          coordinator: C,
@@ -32,8 +32,13 @@ final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting
         self.shouldShowDimiss = shouldShowDimiss
     }
     
+    deinit {
+        coordinator?.stop()
+        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
+    }
+    
     func buttonPressed(isActive: Binding<Bool>) -> some View {
         let vm: DetailViewModel? = (viewModel != nil) ? DetailViewModel(date: viewModel!.date) : nil
-        return coordinator.presentNextView(viewModel: vm, isPresented: isActive)
+        return coordinator?.presentNextView(viewModel: vm, isPresented: isActive)
     }
 }

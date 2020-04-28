@@ -20,18 +20,23 @@ protocol MasterPresenting: ObservableObject {
 final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
-            let vm = String(describing: viewModel)
-            print("\(self) viewModel: \(vm)")
+//            let vm = String(describing: viewModel)
+//            print("\(self) viewModel: \(vm)")
         }
     }
     
-    private let coordinator: C
+    private weak var coordinator: C?
     
     init(viewModel: MasterViewModel,
          coordinator: C) {
         self.viewModel = viewModel
         self.coordinator = coordinator
         bindViewModel()
+    }
+    
+    deinit {
+        coordinator?.stop()
+        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
     }
     
     func bindViewModel() {
@@ -54,14 +59,14 @@ final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
     }
     
     func firstSelected(date: Date, isPresented: Binding<Bool>) -> some View {
-        return coordinator.presentDetailView(viewModel: DetailViewModel(date: date), isPresented: isPresented)
+        return coordinator?.presentDetailView(viewModel: DetailViewModel(date: date), isPresented: isPresented)
     }
     
     func secondSelected(date: Date, isPresented: Binding<Bool>) -> some View {
-        return coordinator.presentDetailRedView(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
+        return coordinator?.presentDetailRedView(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
     }
     
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> some View {
-        return coordinator.presentDetailRedViewInModal(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
+        return coordinator?.presentDetailRedViewInModal(viewModel: DetailRedViewModel(date: date), isPresented: isPresented)
     }
 }

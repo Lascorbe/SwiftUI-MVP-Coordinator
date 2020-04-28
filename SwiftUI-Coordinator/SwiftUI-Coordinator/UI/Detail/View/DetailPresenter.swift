@@ -14,12 +14,12 @@ protocol DetailPresenting: ObservableObject {
 final class DetailPresenter<C: DetailCoordinator>: DetailPresenting {
     @Published private(set) var viewModel: DetailViewModel? {
         didSet {
-            let vm = String(describing: viewModel)
-            print("\(self) viewModel: \(vm)")
+//            let vm = String(describing: viewModel)
+//            print("\(self) viewModel: \(vm)")
         }
     }
     
-    private let coordinator: C
+    private weak var coordinator: C?
     
     init(viewModel: DetailViewModel? = DetailViewModel(date: Date()),
          coordinator: C) {
@@ -27,7 +27,12 @@ final class DetailPresenter<C: DetailCoordinator>: DetailPresenting {
         self.coordinator = coordinator
     }
     
+    deinit {
+        coordinator?.stop()
+        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
+    }
+    
     func buttonPressed(isActive: Binding<Bool>) -> some View {
-        return coordinator.presentNextView(isPresented: isActive)
+        return coordinator?.presentNextView(isPresented: isActive)
     }
 }
