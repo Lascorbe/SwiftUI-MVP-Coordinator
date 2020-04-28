@@ -5,14 +5,22 @@
 
 import SwiftUI
 
-protocol Coordinator: AssociatedObject {
+protocol BaseCoordinator: AssociatedObject {}
+
+protocol StartCoordinator: BaseCoordinator {
     associatedtype U: View
-    associatedtype P: Coordinator
     func start() -> U
 }
 
-extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
-    private(set) var identifier: UUID {
+protocol StopCoordinator: BaseCoordinator {
+    associatedtype P: StopCoordinator
+    func stop()
+}
+
+protocol Coordinator: StartCoordinator, StopCoordinator {}
+
+extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+    fileprivate var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -25,21 +33,51 @@ extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    private(set) weak var parent: P? {
-        get { associatedObject(for: &parentKey) }
-        set { setAssociatedObject(newValue, for: &parentKey, policy: .weak) }
+    fileprivate var children: [UUID: Any] {
+        get {
+            guard let children: [UUID: Any] = associatedObject(for: &childrenKey) else {
+                self.children = [UUID: Any]()
+                return self.children
+            }
+            return children
+        }
+        set {
+            setAssociatedObject(newValue, for: &childrenKey)
+        }
+    }
+    
+    fileprivate func store<T: BaseCoordinator>(coordinator: T) {
+        children[coordinator.identifier] = coordinator
+        print(children)
+    }
+    
+    fileprivate func free<T: BaseCoordinator>(coordinator: T) {
+        children[coordinator.identifier] = nil
+        print(children)
     }
 }
+
+extension StopCoordinator { // Mixin Extension: Check out AssociatedObject.swift
+    fileprivate weak var parent: P? {
+        get { associatedObject(for: &childrenKey) }
+        set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
+    }
     
-extension Coordinator {
+    func stop() {
+        parent?.free(coordinator: self)
+    }
+}
+
+extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
     func coordinate<T: Coordinator>(to coordinator: T) -> some View {
-        _ = coordinator.identifier // generate identifier
+        store(coordinator: coordinator)
         coordinator.parent = self as? T.P
         return coordinator.start()
     }
 }
 
 private var identifierKey: UInt8 = 0
+private var childrenKey: UInt8 = 0
 private var parentKey: UInt8 = 0
 
 // MARK: - Return Wrappers
