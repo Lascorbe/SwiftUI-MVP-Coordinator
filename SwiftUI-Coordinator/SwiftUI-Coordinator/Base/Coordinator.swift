@@ -25,9 +25,9 @@ extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    private(set) var parent: P? {
+    private(set) weak var parent: P? {
         get { associatedObject(for: &parentKey) }
-        set { setAssociatedObject(newValue, for: &parentKey) }
+        set { setAssociatedObject(newValue, for: &parentKey, policy: .weak) }
     }
 }
     
