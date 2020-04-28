@@ -31,6 +31,10 @@ final class RootMasterCoordinator<P: Coordinator>: MasterCoordinator {
         self.window = window
     }
     
+    deinit {
+        print("deinit RootMasterCoordinator \(identifier)")
+    }
+    
     @discardableResult
     func start() -> some View {
         let view = MasterFactory.make(with: MasterViewModel(dates: [Date()]), coordinator: self)
@@ -52,6 +56,11 @@ final class NavigationMasterCoordinator<P: Coordinator>: MasterCoordinator {
     init(viewModel: MasterViewModel?, isPresented: Binding<Bool>) {
         self.viewModel = viewModel
         self.isPresented = isPresented
+    }
+    
+    deinit {
+        print("\(identifier) deinit NavigationMasterCoordinator")
+        stop()
     }
     
     @discardableResult

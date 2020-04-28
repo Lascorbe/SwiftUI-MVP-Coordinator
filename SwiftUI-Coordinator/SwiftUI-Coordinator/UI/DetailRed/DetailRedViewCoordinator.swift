@@ -23,6 +23,11 @@ final class NavigationDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordin
         self.isPresented = isPresented
     }
     
+    deinit {
+        print("\(identifier) deinit NavigationDetailRedCoordinator")
+        stop()
+    }
+    
     @discardableResult
     func start() -> some View {
         let view = DetailRedFactory.make(with: viewModel, coordinator: self)
