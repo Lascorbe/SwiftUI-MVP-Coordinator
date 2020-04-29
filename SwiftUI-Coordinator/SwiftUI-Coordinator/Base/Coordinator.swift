@@ -32,11 +32,11 @@ extension BaseCoordinator {
         set { setAssociatedObject(newValue, for: &childrenKey) }
     }
     
-    fileprivate func store<T: Coordinator>(coordinator: T) {
+    fileprivate func store<T: Coordinator>(child coordinator: T) {
         children[coordinator.identifier] = coordinator
     }
     
-    fileprivate func free<T: Coordinator>(coordinator: T) {
+    fileprivate func free<T: Coordinator>(child coordinator: T) {
         children.removeValue(forKey: coordinator.identifier)
     }
 }
@@ -55,14 +55,14 @@ extension Coordinator {
     }
     
     func coordinate<T: Coordinator>(to coordinator: T) -> some View {
-        store(coordinator: coordinator)
+        store(child: coordinator)
         coordinator.parent = self as? T.P
         return coordinator.start()
     }
     
     func stop() {
         children.removeAll()
-        parent?.free(coordinator: self)
+        parent?.free(child: self)
     }
     
     func shouldStop() {
