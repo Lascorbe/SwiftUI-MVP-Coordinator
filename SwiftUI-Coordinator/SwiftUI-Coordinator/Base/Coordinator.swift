@@ -5,15 +5,12 @@
 
 import SwiftUI
 
-protocol Coordinator: AssociatedObject {
-    associatedtype U: View
-    associatedtype P: Coordinator
-    func start() -> U
+protocol BaseCoordinator: AssociatedObject {
     func stop()
 }
 
-extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
-    private(set) var identifier: UUID {
+extension BaseCoordinator {
+    fileprivate(set) var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -21,37 +18,39 @@ extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
             }
             return identifier
         }
-        set {
-            setAssociatedObject(newValue, for: &identifierKey)
-        }
+        set { setAssociatedObject(newValue, for: &identifierKey) }
     }
     
-    private(set) var children: [UUID: Any] {
+    fileprivate(set) var children: [UUID: BaseCoordinator] {
         get {
-            guard let children: [UUID: Any] = associatedObject(for: &childrenKey) else {
-                self.children = [UUID: Any]()
+            guard let children: [UUID: BaseCoordinator] = associatedObject(for: &childrenKey) else {
+                self.children = [UUID: BaseCoordinator]()
                 return self.children
             }
             return children
         }
-        set {
-            setAssociatedObject(newValue, for: &childrenKey)
-        }
+        set { setAssociatedObject(newValue, for: &childrenKey) }
     }
     
+    fileprivate func store<T: Coordinator>(coordinator: T) {
+        children[coordinator.identifier] = coordinator
+    }
+    
+    fileprivate func free<T: Coordinator>(coordinator: T) {
+        children.removeValue(forKey: coordinator.identifier)
+    }
+}
+
+protocol Coordinator: BaseCoordinator {
+    associatedtype U: View
+    associatedtype P: Coordinator
+    func start() -> U
+}
+
+extension Coordinator {
     private(set) weak var parent: P? {
         get { associatedObject(for: &childrenKey) }
         set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
-    }
-    
-    private func store<T: Coordinator>(coordinator: T) {
-        children[coordinator.identifier] = coordinator
-//        print("\(identifier) store children: \(children.count)")
-    }
-    
-    private func free<T: Coordinator>(coordinator: T) {
-        children.removeValue(forKey: coordinator.identifier)
-//        print("\(identifier) free children: \(children.count)")
     }
     
     func stop() {
