@@ -46,12 +46,12 @@ extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
     
     private func store<T: Coordinator>(coordinator: T) {
         children[coordinator.identifier] = coordinator
-        print("\(identifier) store children: \(children.count)")
+//        print("\(identifier) store children: \(children.count)")
     }
     
     private func free<T: Coordinator>(coordinator: T) {
         children.removeValue(forKey: coordinator.identifier)
-        print("\(identifier) free children: \(children.count)")
+//        print("\(identifier) free children: \(children.count)")
     }
     
     func stop() {
