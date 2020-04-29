@@ -5,18 +5,15 @@
 
 import SwiftUI
 
-protocol Coordinator: BaseCoordinator {
+protocol Coordinator: AssociatedObject {
     associatedtype U: View
+    associatedtype P: Coordinator
     func start() -> U
-}
-
-protocol BaseCoordinator: AssociatedObject {
-    associatedtype P: BaseCoordinator
     func stop()
 }
 
-extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
-    var identifier: UUID {
+extension Coordinator { // Mixin Extension: Check out AssociatedObject.swift
+    private(set) var identifier: UUID {
         get {
             guard let identifier: UUID = associatedObject(for: &identifierKey) else {
                 self.identifier = UUID()
@@ -29,7 +26,7 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    fileprivate var children: [UUID: Any] {
+    private(set) var children: [UUID: Any] {
         get {
             guard let children: [UUID: Any] = associatedObject(for: &childrenKey) else {
                 self.children = [UUID: Any]()
@@ -42,19 +39,19 @@ extension BaseCoordinator { // Mixin Extension: Check out AssociatedObject.swift
         }
     }
     
-    fileprivate func store<T: BaseCoordinator>(coordinator: T) {
+    private(set) weak var parent: P? {
+        get { associatedObject(for: &childrenKey) }
+        set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
+    }
+    
+    private func store<T: Coordinator>(coordinator: T) {
         children[coordinator.identifier] = coordinator
         print("\(identifier) store children: \(children.count)")
     }
     
-    fileprivate func free<T: BaseCoordinator>(coordinator: T) {
+    private func free<T: Coordinator>(coordinator: T) {
         children.removeValue(forKey: coordinator.identifier)
         print("\(identifier) free children: \(children.count)")
-    }
-    
-    fileprivate weak var parent: P? {
-        get { associatedObject(for: &childrenKey) }
-        set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
     }
     
     func stop() {
