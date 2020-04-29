@@ -24,7 +24,7 @@ final class NavigationDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordin
     }
     
     deinit {
-        print("\(identifier) deinit NavigationDetailRedCoordinator")
+//        print("\(identifier) deinit NavigationDetailRedCoordinator")
     }
     
     @discardableResult
@@ -41,6 +41,10 @@ final class ModalDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordinator 
     init(viewModel: DetailRedViewModel?, isPresented: Binding<Bool>) {
         self.viewModel = viewModel
         self.isPresented = isPresented
+    }
+    
+    deinit {
+        //        print("\(identifier) deinit ModalDetailRedCoordinator")
     }
     
     @discardableResult

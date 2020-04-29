@@ -59,7 +59,7 @@ final class NavigationMasterCoordinator<P: Coordinator>: MasterCoordinator {
     }
     
     deinit {
-        print("\(identifier) deinit NavigationMasterCoordinator")
+//        print("\(identifier) deinit NavigationMasterCoordinator")
     }
     
     @discardableResult

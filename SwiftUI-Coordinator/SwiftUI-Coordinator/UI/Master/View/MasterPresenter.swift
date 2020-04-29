@@ -17,7 +17,7 @@ protocol MasterPresenting: ObservableObject {
     func modalSelected(date: Date, isPresented: Binding<Bool>) -> U3
 }
 
-final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
+final class MasterPresenter<C: MasterCoordinator>: Presenter<C>, MasterPresenting {
     @Published private(set) var viewModel: MasterViewModel {
         didSet {
 //            let vm = String(describing: viewModel)
@@ -25,18 +25,11 @@ final class MasterPresenter<C: MasterCoordinator>: MasterPresenting {
         }
     }
     
-    private weak var coordinator: C?
-    
     init(viewModel: MasterViewModel,
          coordinator: C) {
         self.viewModel = viewModel
-        self.coordinator = coordinator
+        super.init(coordinator: coordinator)
         bindViewModel()
-    }
-    
-    deinit {
-        coordinator?.stop()
-        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
     }
     
     func bindViewModel() {

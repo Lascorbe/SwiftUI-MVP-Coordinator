@@ -12,7 +12,7 @@ protocol DetailRedPresenting: ObservableObject {
     func buttonPressed(isActive: Binding<Bool>) -> U
 }
 
-final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting {
+final class DetailRedPresenter<C: DetailRedBaseCoordinator>: Presenter<C>, DetailRedPresenting {
     @Published private(set) var viewModel: DetailRedViewModel? {
         didSet {
 //            let vm = String(describing: viewModel)
@@ -22,19 +22,12 @@ final class DetailRedPresenter<C: DetailRedBaseCoordinator>: DetailRedPresenting
     
     private(set) var shouldShowDimiss: Bool
     
-    private weak var coordinator: C?
-    
-    init(viewModel: DetailRedViewModel? = DetailRedViewModel(date: Date()),
+    init(viewModel: DetailRedViewModel?,
          coordinator: C,
          shouldShowDimiss: Bool) {
         self.viewModel = viewModel
-        self.coordinator = coordinator
         self.shouldShowDimiss = shouldShowDimiss
-    }
-    
-    deinit {
-        coordinator?.stop()
-        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
+        super.init(coordinator: coordinator)
     }
     
     func buttonPressed(isActive: Binding<Bool>) -> some View {

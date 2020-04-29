@@ -15,7 +15,7 @@ final class AppCoordinator: Coordinator {
     }
     
     deinit {
-        print("deinit AppCoordinator \(identifier)")
+        print("⚠️ deinit AppCoordinator \(identifier)")
     }
     
     @discardableResult

@@ -11,7 +11,7 @@ protocol DetailPresenting: ObservableObject {
     func buttonPressed(isActive: Binding<Bool>) -> U
 }
 
-final class DetailPresenter<C: DetailCoordinator>: DetailPresenting {
+final class DetailPresenter<C: DetailCoordinator>: Presenter<C>, DetailPresenting {
     @Published private(set) var viewModel: DetailViewModel? {
         didSet {
 //            let vm = String(describing: viewModel)
@@ -19,17 +19,10 @@ final class DetailPresenter<C: DetailCoordinator>: DetailPresenting {
         }
     }
     
-    private weak var coordinator: C?
-    
-    init(viewModel: DetailViewModel? = DetailViewModel(date: Date()),
+    init(viewModel: DetailViewModel?,
          coordinator: C) {
         self.viewModel = viewModel
-        self.coordinator = coordinator
-    }
-    
-    deinit {
-        coordinator?.stop()
-        print("\(coordinator?.identifier.description ?? "nil") deinit MasterPresenter")
+        super.init(coordinator: coordinator)
     }
     
     func buttonPressed(isActive: Binding<Bool>) -> some View {
