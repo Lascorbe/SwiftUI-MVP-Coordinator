@@ -13,7 +13,7 @@ class Presenter<C: Coordinator> {
     }
     
     deinit {
-        coordinator?.stop()
+        coordinator?.shouldStop()
 //        print("\(coordinator?.identifier.description ?? "nil") deinit \(Self.self)")
     }
 }

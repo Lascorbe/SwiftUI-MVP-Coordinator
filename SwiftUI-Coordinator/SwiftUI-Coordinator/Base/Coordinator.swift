@@ -45,6 +45,7 @@ protocol Coordinator: BaseCoordinator {
     associatedtype U: View
     associatedtype P: Coordinator
     func start() -> U
+    func shouldStop()
 }
 
 extension Coordinator {
@@ -53,15 +54,19 @@ extension Coordinator {
         set { setAssociatedObject(newValue, for: &childrenKey, policy: .weak) }
     }
     
+    func coordinate<T: Coordinator>(to coordinator: T) -> some View {
+        store(coordinator: coordinator)
+        coordinator.parent = self as? T.P
+        return coordinator.start()
+    }
+    
     func stop() {
         children.removeAll()
         parent?.free(coordinator: self)
     }
     
-    func coordinate<T: Coordinator>(to coordinator: T) -> some View {
-        store(coordinator: coordinator)
-        coordinator.parent = self as? T.P
-        return coordinator.start()
+    func shouldStop() {
+        stop()
     }
 }
 
