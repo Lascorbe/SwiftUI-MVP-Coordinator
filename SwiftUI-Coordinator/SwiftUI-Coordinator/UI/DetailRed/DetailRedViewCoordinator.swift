@@ -30,9 +30,7 @@ final class NavigationDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordin
     @discardableResult
     func start() -> some View {
         let view = DetailRedFactory.make(with: viewModel, coordinator: self)
-        return NavigationLink(destination: view, isActive: isPresented) {
-            EmptyView()
-        }
+        return NavigationLinkWrapper(destination: view, isPresented: isPresented)
     }
 }
 
@@ -54,7 +52,7 @@ final class ModalDetailRedCoordinator<P: Coordinator>: DetailRedBaseCoordinator 
         // if we present it in the modal stack (run and press "Go Detail Red Modal" > "Date" > "Date" > MasterView)
 //            .navigationViewStyle(StackNavigationViewStyle())
         
-        // Showing how ModalReturnWrapper works
-        return ModalReturnWrapper(isPresented: isPresented, destination: destination)
+        // Showing how ModalLinkWrapper works
+        return ModalLinkWrapper(destination: destination, isPresented: isPresented)
     }
 }

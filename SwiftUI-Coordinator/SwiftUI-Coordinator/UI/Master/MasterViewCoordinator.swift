@@ -45,7 +45,7 @@ final class RootMasterCoordinator<P: Coordinator>: MasterCoordinator {
         let hosting = UIHostingController(rootView: navigation)
         window?.rootViewController = hosting
         window?.makeKeyAndVisible()
-        return EmptyReturnWrapper(destination: EmptyView()) // we have to return something
+        return EmptyView() // we have to return something
     }
 }
 
@@ -67,14 +67,10 @@ final class NavigationMasterCoordinator<P: Coordinator>: MasterCoordinator {
         // Is there a better way to do this if?
         if let viewModel = viewModel {
             let view = MasterFactory.make(with: viewModel, coordinator: self)
-            return NavigationLink(destination: view, isActive: isPresented) {
-                EmptyView()
-            }
+            return NavigationLinkWrapper(destination: view, isPresented: isPresented)
         } else {
             let view = MasterFactory.make(coordinator: self)
-            return NavigationLink(destination: view, isActive: isPresented) {
-                EmptyView()
-            }
+            return NavigationLinkWrapper(destination: view, isPresented: isPresented)
         }
     }
 }

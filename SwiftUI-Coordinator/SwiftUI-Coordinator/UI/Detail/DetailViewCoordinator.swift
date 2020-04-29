@@ -30,7 +30,6 @@ final class NavigationDetailCoordinator<P: Coordinator>: DetailCoordinator {
     @discardableResult
     func start() -> some View {
         let view = DetailFactory.make(with: viewModel, coordinator: self)
-        // Showing how NavigationReturnWrapper works
-        return NavigationReturnWrapper(isPresented: isPresented, destination: view)
+        return NavigationLinkWrapper(destination: view, isPresented: isPresented)
     }
 }
