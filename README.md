@@ -21,4 +21,4 @@ If you'd like to contribute or make a suggestion, please open a PR.
 
 ## License
 
-This project is available under the MIT license. See the [LICENSE](LICENSE.md) file for more info.
+This project is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
