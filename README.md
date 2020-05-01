@@ -9,7 +9,7 @@ You can find the blog posts explaining the implementation here:
 
 ## Playground
 
-There's also playground with the implementation [here](mvp+coordinators.playground).
+There's also playground with the implementation [here](playground).
 
 ## Author
 
@@ -21,4 +21,4 @@ If you'd like to contribute or make a suggestion, please open a PR.
 
 ## License
 
-This project is available under the MIT license. See the [LICENSE](/blob/master/LICENSE.md) file for more info.
+This project is available under the MIT license. See the [LICENSE](LICENSE.md) file for more info.
