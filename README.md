@@ -1,4 +1,9 @@
 # MVP+Coordinator in SwiftUI
+
+[![Swift 5](https://img.shields.io/badge/swift-5-red.svg?style=flat)](https://developer.apple.com/swift)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
+[![Twitter](https://img.shields.io/badge/twitter-@lascorbe-blue.svg)](http://twitter.com/lascorbe)
+
 This project is a complete implementation of the code shown in my blog post series on creating an iOS app with a MVP + Coordinator approach in SwiftUI.
 
 You can find the blog posts explaining the implementation here:
